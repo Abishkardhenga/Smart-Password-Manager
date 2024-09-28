@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import AppLogo from "@/assets/images/applogo.svg"
 import { Colors } from "@/constants/Colors"
+import { router } from "expo-router"
 
 const Index = () => {
   return (
@@ -10,9 +11,12 @@ const Index = () => {
       <AppLogo width={200} height={200} />
       <Text style={styles.title}>Smart Password Manager</Text>
 
-      <View style={styles.iconContainer}>
+      <TouchableOpacity
+        style={styles.iconContainer}
+        onPress={() => router.navigate("/Addpassword")}
+      >
         <Ionicons name="add-circle-outline" size={80} color={Colors.GREEN} />
-      </View>
+      </TouchableOpacity>
     </View>
   )
 }

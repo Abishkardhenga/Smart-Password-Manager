@@ -4,7 +4,7 @@ import React, { useState } from "react"
 interface inputProps {
   label: string
   placeholder: string
-  secureTextEntry: boolean
+  secureTextEntry?: boolean
 }
 
 const CustomInput = ({
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     marginVertical: 10,
-    marginTop: 23,
+    marginTop: 15,
   },
   label: {
     fontSize: 16,

@@ -48,6 +48,18 @@ const TabLayout = () => {
           ),
         }}
       />
+      <Tabs.Screen
+        name="Addpassword"
+        options={{
+          tabBarButton: () => null, // Hides from the tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="ViewDetails"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
     </Tabs>
   )
 }

@@ -1,4 +1,6 @@
+import Passwordcard from "@/components/Passwordcard"
 import { Colors } from "@/constants/Colors"
+import { router } from "expo-router"
 import React from "react"
 import {
   SafeAreaView,
@@ -62,7 +64,19 @@ const Saved = () => {
         />
 
         <View style={styles.noPasswordContainer}>
-          <Text style={styles.noPasswordText}>No passwords to show</Text>
+          {/* <Text style={styles.noPasswordText}>No passwords to show</Text> */}
+          <Passwordcard
+            title="Facebook"
+            emailOrNumber="98765456789"
+            address={() => router.push("/(tabs)/ViewDetails")}
+            color="#000"
+          />
+          <Passwordcard
+            title="Gmail"
+            emailOrNumber="98765456789"
+            address={() => router.push("/(tabs)/ViewDetails")}
+            color="#f44336"
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -115,8 +129,6 @@ const styles = StyleSheet.create({
   },
   noPasswordContainer: {
     height: "75%",
-    justifyContent: "center",
-    alignItems: "center",
   },
   noPasswordText: {
     fontSize: 18,
