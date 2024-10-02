@@ -10,6 +10,7 @@ import CustomBackButton from "@/components/CustomBackButton"
 import Viewdetailscard from "@/components/Viewdetailscard"
 import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
+import { router } from "expo-router"
 
 interface viewdetailsProps {
   title: string
@@ -50,6 +51,7 @@ const ViewDetails = ({
             bottom: 42,
             right: 12,
           }}
+          onPress={() => router.push("/Addpassword")}
         >
           <Feather name="edit" size={36} color={Colors.BLACK} />
         </TouchableOpacity>
