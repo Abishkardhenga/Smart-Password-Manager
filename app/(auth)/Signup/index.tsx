@@ -10,10 +10,15 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import Firstoval from "@/assets/images/Firstoval.svg"
+import Secondoval from "@/assets/images/Secondoval.svg"
+import Authheader from "@/components/Authheader"
 
 const Signup = () => {
   return (
     <SafeAreaView style={styles.container}>
+      <Authheader />
+
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Create User Account</Text>

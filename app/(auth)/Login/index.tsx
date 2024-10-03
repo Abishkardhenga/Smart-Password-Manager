@@ -10,17 +10,22 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
+import Firstoval from "@/assets/images/Firstoval.svg"
+import Secondoval from "@/assets/images/Secondoval.svg"
+import Authheader from "@/components/Authheader"
 
 const Login = () => {
   return (
     <SafeAreaView style={styles.container}>
+      <Authheader />
+
       <View style={styles.innerContainer}>
-        {/* Header Section */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Welcome Back !!!</Text>
         </View>
+        <LoginScreenImg width={250} height={150} />
 
-        {/* Input Fields */}
         <View style={styles.inputContainer}>
           <CustomInput
             label="Email"
@@ -73,14 +78,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   headerContainer: {
-    alignItems: "flex-start",
-    marginBottom: 20,
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: Colors.BLACK,
-    marginBottom: 5,
   },
 
   inputContainer: {
