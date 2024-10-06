@@ -19,3 +19,13 @@
     email: string;
     password: string;
 }
+
+
+export interface updatedFields { 
+   label_id:string,
+    password:string, 
+    title:string, 
+    website:string, 
+    contact_info:string
+ 
+ }
