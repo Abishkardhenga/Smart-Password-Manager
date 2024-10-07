@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
@@ -14,8 +14,23 @@ import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
+import { login } from "@/configs/Firebase.config"
+import { showToast } from "@/utilis/Toast.message"
 
 const Login = () => {
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+
+  const onLogin = async (emai: string, password: string) => {
+    if (!email && !password) {
+      showToast({ type: "error", text1: "Please fill in all details " })
+      return
+    }
+    const loginUser = await login(email, password)
+    router.push("/(tabs)/")
+    console.log("loginUser", loginUser)
+    showToast({ type: "success", text1: "Login successfully" })
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Authheader />
@@ -31,11 +46,15 @@ const Login = () => {
             label="Email"
             placeholder="example@gmail.com"
             secureTextEntry={false}
+            value={email}
+            onChangeText={setEmail}
           />
           <CustomInput
             label="Password"
             placeholder="Enter your password"
             secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
           />
         </View>
 
@@ -49,7 +68,7 @@ const Login = () => {
         <CustomButton
           text="Login"
           color={Colors.GREEN}
-          address={() => router.push("/(tabs)/")}
+          onPress={() => onLogin(email, password)}
         />
 
         <View style={styles.footer}>

@@ -97,7 +97,7 @@ const Addpassword = () => {
           <CustomButton
             color={Colors.BLACK}
             text={editMode ? "Update Password" : "Save Password"}
-            address={() => router.push("/(tabs)/")}
+            onPress={() => router.push("/(tabs)/")}
           />
         </View>
       </ScrollView>

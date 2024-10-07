@@ -5,15 +5,17 @@ interface inputProps {
   label: string
   placeholder: string
   secureTextEntry?: boolean
+  value?: string
+  onChangeText?: (text: string) => void
 }
 
 const CustomInput = ({
   label,
   placeholder,
   secureTextEntry = false,
+  value,
+  onChangeText,
 }: inputProps) => {
-  const [value, setValue] = useState("")
-
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -22,7 +24,7 @@ const CustomInput = ({
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
         value={value}
-        onChangeText={setValue}
+        onChangeText={onChangeText}
       />
     </View>
   )

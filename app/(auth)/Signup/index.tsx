@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
@@ -13,8 +13,33 @@ import { router } from "expo-router"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
+import { signup } from "@/configs/Firebase.config"
+import { showToast } from "@/utilis/Toast.message"
 
 const Signup = () => {
+  const [email, setEmail] = useState<string>("")
+  const [name, setName] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+
+  const onCreateAccount = async (
+    email: string,
+    password: string,
+    name: string
+  ) => {
+    if (!email || !password || !name) {
+      showToast({ type: "success", text1: "Please fill in all details " })
+      console.log("Please fill in all details")
+
+      return
+    }
+
+    const data = await signup(email, password)
+    showToast({ type: "success", text1: "Signup successfully" })
+
+    router.push("/(tabs)/")
+    console.log("Data on signup:", data)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Authheader />
@@ -30,16 +55,22 @@ const Signup = () => {
             label="Name"
             placeholder="Aabiskar Dhenga"
             secureTextEntry={false}
+            value={name}
+            onChangeText={setName}
           />
           <CustomInput
             label="Email"
             placeholder="example@gmail.com"
             secureTextEntry={false}
+            value={email}
+            onChangeText={setEmail}
           />
           <CustomInput
             label="Password"
             placeholder="Enter your password"
             secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
           />
         </View>
 
@@ -53,7 +84,7 @@ const Signup = () => {
         <CustomButton
           text="Sign Up"
           color={Colors.GREEN}
-          address={() => router.push("/(tabs)/")}
+          onPress={() => onCreateAccount(email, password, name)}
         />
 
         <View style={styles.footer}>

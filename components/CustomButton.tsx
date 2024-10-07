@@ -5,10 +5,10 @@ import { Colors } from "@/constants/Colors"
 interface buttonProps {
   color: string
   text: string
-  address: () => void
+  onPress?: () => void
 }
 
-const CustomButton = ({ color, text, address }: buttonProps) => {
+const CustomButton = ({ color, text, onPress }: buttonProps) => {
   return (
     <View
       style={{
@@ -18,7 +18,7 @@ const CustomButton = ({ color, text, address }: buttonProps) => {
         width: "100%",
       }}
     >
-      <TouchableOpacity onPress={address}>
+      <TouchableOpacity onPress={onPress}>
         {text && (
           <Text
             style={{
