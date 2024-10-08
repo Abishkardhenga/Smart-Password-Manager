@@ -60,6 +60,12 @@ const TabLayout = () => {
           tabBarButton: () => null,
         }}
       />
+      <Tabs.Screen
+        name="AddLabel"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
     </Tabs>
   )
 }

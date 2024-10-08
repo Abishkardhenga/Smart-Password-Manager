@@ -27,14 +27,14 @@ const Signup = () => {
     name: string
   ) => {
     if (!email || !password || !name) {
-      showToast({ type: "success", text1: "Please fill in all details " })
+      showToast({ type: "danger", text: "Enter all the details" })
       console.log("Please fill in all details")
 
       return
     }
 
     const data = await signup(email, password)
-    showToast({ type: "success", text1: "Signup successfully" })
+    showToast({ type: "success", text: "Signup Successfully" })
 
     router.push("/(tabs)/")
     console.log("Data on signup:", data)

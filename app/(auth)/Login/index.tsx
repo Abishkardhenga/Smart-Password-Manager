@@ -23,13 +23,13 @@ const Login = () => {
 
   const onLogin = async (emai: string, password: string) => {
     if (!email && !password) {
-      showToast({ type: "error", text1: "Please fill in all details " })
+      showToast({ type: "danger", text: "Enter all the details" })
       return
     }
     const loginUser = await login(email, password)
     router.push("/(tabs)/")
     console.log("loginUser", loginUser)
-    showToast({ type: "success", text1: "Login successfully" })
+    showToast({ type: "success", text: "Successfully login" })
   }
   return (
     <SafeAreaView style={styles.container}>

@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  ScrollView,
 } from "react-native"
+import Ionicons from "@expo/vector-icons/Ionicons"
 
 const Saved = () => {
   const passwordCategories = [
@@ -43,25 +45,35 @@ const Saved = () => {
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={() => router.push("/(tabs)/AddLabel")}>
+            <Ionicons name="add-circle-outline" size={54} color="#f44336" />
+          </TouchableOpacity>
 
-        <FlatList
-          data={passwordCategories}
-          renderItem={({ item }) => (
-            <View
-              style={[
-                styles.categoryContainer,
-                { backgroundColor: item.backgroundColor },
-              ]}
-            >
-              <Text style={[styles.categoryText, { color: item.textColor }]}>
-                {item.name}
-              </Text>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
+          <FlatList
+            data={passwordCategories}
+            renderItem={({ item }) => (
+              <View
+                style={[
+                  styles.categoryContainer,
+                  { backgroundColor: item.backgroundColor },
+                ]}
+              >
+                <Text style={[styles.categoryText, { color: item.textColor }]}>
+                  {item.name}
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
 
         <View style={styles.noPasswordContainer}>
           {/* <Text style={styles.noPasswordText}>No passwords to show</Text> */}
