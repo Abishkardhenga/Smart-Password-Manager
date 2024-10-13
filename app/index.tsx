@@ -11,8 +11,23 @@ import {
 import Onboard from "@/assets/images/onboard.svg" // Ensure this path is correct
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "@/configs/Firebase.config"
 
 const Index = () => {
+  const user = auth.currentUser
+
+  const getStarted = () => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, navigate to the main app
+        router.push("/(tabs)/")
+      } else {
+        // User is not signed in, navigate to signup
+        router.push("/(auth)/Signup")
+      }
+    })
+  }
   return (
     <SafeAreaView>
       <StatusBar hidden />
@@ -39,7 +54,7 @@ const Index = () => {
             borderRadius: 20,
             marginTop: 34,
           }}
-          onPress={() => router.push("/(auth)/Signup")}
+          onPress={() => getStarted()}
         >
           <Text
             style={{

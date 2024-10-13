@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -12,62 +12,86 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
-interface categoryProps {
-  label: string
+import { addStoredData, getLabelsByUser } from "@/configs/Firebase.config"
+import uuid from "react-native-uuid"
+
+export interface CategoryProps {
+  name: string
   color: string
   selectedColor?: string
+  user_id?: string
+  id?: string
 }
 
-const categories = [
-  { label: "Personal", color: "#FFD700", selectedColor: "#FFBF00" },
-  { label: "Finance", color: "#4CAF50", selectedColor: "#388E3C" },
-  { label: "Official", color: "#F44336", selectedColor: "#C62828" },
-  { label: "Other", color: Colors.LIGHT_GRAY },
-]
-
 const Addpassword = () => {
-  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("")
   const [editMode, setEditMode] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>()
-  const [website, setWebsite] = useState<string>()
-  const [contactinfo, setContactinfo] = useState<string>()
-  const [password, setPassword] = useState<string>()
+  const [title, setTitle] = useState<string>("")
+  const [website, setWebsite] = useState<string>("")
+  const [contactinfo, setContactinfo] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
 
-  const onAddPassword = () => {
-    if (!selectedCategory || !title || !website || !contactinfo || !password) {
-      showToast({ type: "warning", text: "Please fill in all the details" })
-      return
+  const [category, setCategory] = useState<CategoryProps[]>([])
+
+  useEffect(() => {
+    const fetchLabel = async () => {
+      const label = await getLabelsByUser()
+      console.log("Label:", label)
+      setCategory(label)
     }
 
+    fetchLabel() // Call the function to fetch labels
+  }, [])
+
+  const onAddPassword = async () => {
     console.log("Selected Category:", selectedCategory)
     console.log("Title:", title)
     console.log("Website:", website)
     console.log("Contact Info:", contactinfo)
     console.log("Password:", password)
+    if (!selectedCategory || !title || !website || !contactinfo || !password) {
+      showToast({ type: "warning", text: "Please fill in all the details" })
+      return
+    }
+
+    // Prepare the data
+    const label_id = JSON.stringify(uuid.v4()) // Generating label_id here
+    const label_name = selectedCategory
+
+    // Call addStoredData with the required individual parameters
+    const storedata = await addStoredData(
+      label_id,
+      password,
+      title,
+      website,
+      contactinfo,
+      label_name
+    )
+    console.log("stored data", storedata)
 
     showToast({ type: "success", text: "Password successfully added" })
     router.back()
   }
 
   const renderCategoryButton = ({
-    label,
+    name,
     color,
     selectedColor,
-  }: categoryProps) => {
-    const isSelected = selectedCategory === label
+  }: CategoryProps) => {
+    const isSelected = selectedCategory === name
 
     return (
       <TouchableOpacity
-        key={label}
+        key={name}
         style={[
           styles.categoryButton,
           {
-            backgroundColor: isSelected ? selectedColor : color,
+            backgroundColor: isSelected ? selectedColor || "#000" : color, // Default to black if no selectedColor
             borderWidth: isSelected ? 2 : 0,
             borderColor: isSelected ? "black" : "transparent",
           },
         ]}
-        onPress={() => setSelectedCategory(label)}
+        onPress={() => setSelectedCategory(name)}
       >
         <Text
           style={[
@@ -75,7 +99,7 @@ const Addpassword = () => {
             { color: isSelected ? "white" : Colors.BLACK },
           ]}
         >
-          {label}
+          {name} {/* Changed from category to name to display category name */}
         </Text>
       </TouchableOpacity>
     )
@@ -93,32 +117,46 @@ const Addpassword = () => {
           </Text>
           <Text style={styles.subtitle}>Add new password to your records</Text>
 
-          <CustomInput label="Title" placeholder="Enter the title" />
+          <CustomInput
+            label="Title"
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Enter the title"
+          />
 
           <View style={styles.categoryContainer}>
             <Text style={styles.label}>Choose Category</Text>
             <View style={styles.categoryOptions}>
-              {categories.map(({ label, color, selectedColor }) =>
-                renderCategoryButton({ label, color, selectedColor })
+              {category.map(({ name, color, user_id, id, selectedColor }) =>
+                renderCategoryButton({ name, color, selectedColor })
               )}
             </View>
           </View>
 
-          <CustomInput label="Website" placeholder="Enter the Website" />
+          <CustomInput
+            label="Website"
+            value={website}
+            onChangeText={setWebsite}
+            placeholder="Enter the Website"
+          />
           <CustomInput
             label="Email/Phone no."
+            value={contactinfo}
+            onChangeText={setContactinfo}
             placeholder="Enter Email / Phone no."
           />
           <CustomInput
             label="Password"
             placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
             secureTextEntry={true}
           />
 
           <CustomButton
             color={Colors.BLACK}
             text={editMode ? "Update Password" : "Save Password"}
-            onPress={() => router.push("/(tabs)/")}
+            onPress={() => onAddPassword()}
           />
         </View>
       </ScrollView>

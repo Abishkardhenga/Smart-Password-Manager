@@ -1,7 +1,7 @@
 import Passwordcard from "@/components/Passwordcard"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
   SafeAreaView,
   View,
@@ -10,27 +10,24 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  ScrollView,
 } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
+import { getLabelsByUser } from "@/configs/Firebase.config"
+import { CategoryProps } from "./Addpassword"
+import uuid from "react-native-uuid"
 
 const Saved = () => {
-  const passwordCategories = [
-    { id: "1", name: "All", backgroundColor: "#000", textColor: "#fff" },
-    {
-      id: "2",
-      name: "Personal",
-      backgroundColor: "#ffeb3b",
-      textColor: "#000",
-    },
-    {
-      id: "3",
-      name: "Official",
-      backgroundColor: "#f44336",
-      textColor: "#fff",
-    },
-    { id: "4", name: "Finance", backgroundColor: "#4caf50", textColor: "#fff" },
-  ]
+  const [category, setCategory] = useState<CategoryProps[]>([])
+
+  useEffect(() => {
+    const fetchLabel = async () => {
+      const label = await getLabelsByUser()
+      console.log("Label:", label)
+      setCategory(label)
+    }
+
+    fetchLabel() // Call the function to fetch labels
+  }, [])
 
   return (
     <SafeAreaView>
@@ -45,38 +42,32 @@ const Saved = () => {
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TouchableOpacity onPress={() => router.push("/(tabs)/AddLabel")}>
             <Ionicons name="add-circle-outline" size={54} color="#f44336" />
           </TouchableOpacity>
 
           <FlatList
-            data={passwordCategories}
+            data={category} // Use the dynamic category data
             renderItem={({ item }) => (
               <View
                 style={[
                   styles.categoryContainer,
-                  { backgroundColor: item.backgroundColor },
+                  { backgroundColor: item.color || "#ccc" }, // Use a default color if not provided
                 ]}
               >
-                <Text style={[styles.categoryText, { color: item.textColor }]}>
+                <Text style={[styles.categoryText, { color: "#fff" }]}>
                   {item.name}
                 </Text>
               </View>
             )}
-            keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
           />
         </View>
 
         <View style={styles.noPasswordContainer}>
-          {/* <Text style={styles.noPasswordText}>No passwords to show</Text> */}
+          {/* Placeholder for password cards; replace with actual data later */}
           <Passwordcard
             title="Facebook"
             emailOrNumber="98765456789"
