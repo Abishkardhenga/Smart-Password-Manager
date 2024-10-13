@@ -14,6 +14,7 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import { showToast } from "@/utilis/Toast.message"
 
 interface CategoryProps {
   label: string
@@ -22,40 +23,19 @@ interface CategoryProps {
 }
 
 const AddLabel = () => {
-  const [selectedCategory, setSelectedCategory] = useState("")
+  const [label, setLabel] = useState<string>()
   const [editMode, setEditMode] = useState<boolean>(false)
-  const [currentColor, setCurrentColor] = useState<string>("#FFFFFF") // Default color for ColorPicker
+  const [currentColor, setCurrentColor] = useState<string>("")
 
-  const renderCategoryButton = ({
-    label,
-    color,
-    selectedColor,
-  }: CategoryProps) => {
-    const isSelected = selectedCategory === label
-
-    return (
-      <TouchableOpacity
-        key={label}
-        style={[
-          styles.categoryButton,
-          {
-            backgroundColor: isSelected ? selectedColor : color,
-            borderWidth: isSelected ? 2 : 0,
-            borderColor: isSelected ? "black" : "transparent",
-          },
-        ]}
-        onPress={() => setSelectedCategory(label)}
-      >
-        <Text
-          style={[
-            styles.categoryText,
-            { color: isSelected ? "white" : Colors.BLACK },
-          ]}
-        >
-          {label}
-        </Text>
-      </TouchableOpacity>
-    )
+  const onSaveLabel = () => {
+    if (label === "" || !currentColor) {
+      showToast({ type: "warning", text: "Please enter all the details" })
+      return
+    }
+    console.log("label", label)
+    console.log("current color ", currentColor)
+    showToast({ type: "success", text: "Label successfully created" })
+    router.back()
   }
 
   return (
@@ -70,7 +50,12 @@ const AddLabel = () => {
           </Text>
           <Text style={styles.subtitle}>Add new Label to your records</Text>
 
-          <CustomInput label="Name" placeholder="Enter the Label Name" />
+          <CustomInput
+            label="Name"
+            value={label}
+            onChangeText={setLabel}
+            placeholder="Enter the Label Name"
+          />
           <View style={styles.colorPickerContainer}>
             <ColorPicker
               color={currentColor}
@@ -79,8 +64,8 @@ const AddLabel = () => {
               sliderSize={40}
               noSnap={true}
               row={false}
-              wheelLodingIndicator={<ActivityIndicator size={40} />}
-              sliderLodingIndicator={<ActivityIndicator size={20} />}
+              wheelLoadingIndicator={<ActivityIndicator size={40} />}
+              sliderLoadingIndicator={<ActivityIndicator size={20} />}
               useNativeDriver={false}
             />
           </View>
@@ -88,7 +73,7 @@ const AddLabel = () => {
           <CustomButton
             color={Colors.BLACK}
             text={editMode ? "Update Label" : "Save Label"}
-            onPress={() => router.push("/(tabs)/")}
+            onPress={() => onSaveLabel()}
           />
         </View>
       </ScrollView>

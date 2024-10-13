@@ -33,7 +33,7 @@ const Signup = () => {
       return
     }
 
-    const data = await signup(email, password)
+    const data = await signup(email, password, name)
     showToast({ type: "success", text: "Signup Successfully" })
 
     router.push("/(tabs)/")

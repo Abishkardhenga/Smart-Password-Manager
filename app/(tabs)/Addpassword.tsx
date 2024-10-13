@@ -11,6 +11,7 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import { showToast } from "@/utilis/Toast.message"
 interface categoryProps {
   label: string
   color: string
@@ -27,6 +28,26 @@ const categories = [
 const Addpassword = () => {
   const [selectedCategory, setSelectedCategory] = useState("")
   const [editMode, setEditMode] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>()
+  const [website, setWebsite] = useState<string>()
+  const [contactinfo, setContactinfo] = useState<string>()
+  const [password, setPassword] = useState<string>()
+
+  const onAddPassword = () => {
+    if (!selectedCategory || !title || !website || !contactinfo || !password) {
+      showToast({ type: "warning", text: "Please fill in all the details" })
+      return
+    }
+
+    console.log("Selected Category:", selectedCategory)
+    console.log("Title:", title)
+    console.log("Website:", website)
+    console.log("Contact Info:", contactinfo)
+    console.log("Password:", password)
+
+    showToast({ type: "success", text: "Password successfully added" })
+    router.back()
+  }
 
   const renderCategoryButton = ({
     label,
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   categoryButton: {
-    padding: 10,
+    padding: 8,
     borderRadius: 8,
     marginRight: 10,
   },
