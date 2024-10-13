@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,6 +15,9 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
+import { addLabel } from "@/configs/Firebase.config"
+import uuid from "react-native-uuid"
+import { CreateUserContext } from "@/context/CreateUserContext"
 
 interface CategoryProps {
   label: string
@@ -27,11 +30,15 @@ const AddLabel = () => {
   const [editMode, setEditMode] = useState<boolean>(false)
   const [currentColor, setCurrentColor] = useState<string>("")
 
-  const onSaveLabel = () => {
+  const { userData, setUserData } = useContext(CreateUserContext)
+
+  const onSaveLabel = async () => {
     if (label === "" || !currentColor) {
       showToast({ type: "warning", text: "Please enter all the details" })
       return
     }
+
+    await addLabel(label!, currentColor)
     console.log("label", label)
     console.log("current color ", currentColor)
     showToast({ type: "success", text: "Label successfully created" })

@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
@@ -16,10 +16,13 @@ import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
 import { login } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
+import { CreateUserContext } from "@/context/CreateUserContext"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+
+  const { userData, setUserData } = useContext(CreateUserContext)
 
   const onLogin = async (emai: string, password: string) => {
     if (!email && !password) {
@@ -27,6 +30,7 @@ const Login = () => {
       return
     }
     const loginUser = await login(email, password)
+    setUserData(loginUser)
     router.push("/(tabs)/")
     console.log("loginUser", loginUser)
     showToast({ type: "success", text: "Successfully login" })
