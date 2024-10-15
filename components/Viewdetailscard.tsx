@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
 import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
+import { showToast } from "@/utilis/Toast.message"
 
 interface viewdetailCardProps {
   title: string
@@ -44,7 +45,11 @@ const Viewdetailscard = ({ title, value }: viewdetailCardProps) => {
         </Text>
       </View>
       {title === "Title" || title === "Label" ? null : (
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            showToast({ type: "success", text: "Successfully Copied" })
+          }
+        >
           <Feather name="clipboard" size={24} color={Colors.GRAY} />
         </TouchableOpacity>
       )}

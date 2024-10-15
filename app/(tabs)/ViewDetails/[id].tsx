@@ -30,14 +30,14 @@ const ViewDetails = ({
   password,
 }: viewdetailsProps) => {
   const { id } = useLocalSearchParams()
-  const [details, setDetails] = useState<StoreDataProps>()
+  const [details, setDetails] = useState<StoreDataProps | null>(null) // Store fetched details
 
   useEffect(() => {
     const fetchStoreDataById = async () => {
-      const data = await getStoreDatabyId(
-        "05e497b9-f3b5-4a80-aa4c-86c29f46f60b"
-      )
-      console.log("data", data)
+      if (id) {
+        const data = await getStoreDatabyId(id as string)
+        setDetails(data as StoreDataProps)
+      }
     }
     fetchStoreDataById()
   }, [id])
@@ -52,14 +52,14 @@ const ViewDetails = ({
         }}
       >
         <CustomBackButton label="View Details" />
-        <Viewdetailscard title="Title" value="Facebook Password" />
-        <Viewdetailscard title="Website" value="www.facebook.com" />
-        <Viewdetailscard title="Label" value="Personal" />
+        <Viewdetailscard title="Title" value={details?.title!} />
+        <Viewdetailscard title="Website" value={details?.website!} />
+        <Viewdetailscard title="Label" value={details?.label_name!} />
         <Viewdetailscard
           title="Email/Phone no."
-          value="Aabiskardhenga29@gmail.com"
+          value={details?.contact_info!}
         />
-        <Viewdetailscard title="Password" value="Hackmeifyoucan" />
+        <Viewdetailscard title="Password" value={details?.password!} />
         <TouchableOpacity
           style={{
             position: "absolute",
