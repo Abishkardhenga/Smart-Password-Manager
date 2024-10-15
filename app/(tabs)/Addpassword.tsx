@@ -71,6 +71,8 @@ const Addpassword = () => {
 
     showToast({ type: "success", text: "Password successfully added" })
     router.back()
+    setContactinfo(""), setPassword(""), setTitle("")
+    setWebsite("")
   }
 
   const renderCategoryButton = ({

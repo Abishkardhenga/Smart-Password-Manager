@@ -55,7 +55,7 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="ViewDetails"
+        name="ViewDetails/[id]"
         options={{
           tabBarButton: () => null,
         }}

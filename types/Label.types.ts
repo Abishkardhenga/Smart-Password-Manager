@@ -6,7 +6,9 @@
 
 
  export interface StoreDataProps {
-    label_id:string
+   id?:string;
+    label_id?:string
+    label_name?:string
     contact_info:string
     title:string 
     user_id:string
@@ -29,3 +31,6 @@ export interface updatedFields {
     contact_info:string
  
  }
+
+
+ 

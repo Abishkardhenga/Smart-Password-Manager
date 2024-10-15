@@ -2,6 +2,8 @@ import Passwordcard from "@/components/Passwordcard"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import React, { useEffect, useState } from "react"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+
 import {
   SafeAreaView,
   View,
@@ -12,22 +14,49 @@ import {
   FlatList,
 } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import { getLabelsByUser } from "@/configs/Firebase.config"
+import {
+  deleteLabel,
+  getLabelsByUser,
+  getStoredData,
+} from "@/configs/Firebase.config"
 import { CategoryProps } from "./Addpassword"
 import uuid from "react-native-uuid"
+import { StoreDataProps } from "@/types/Label.types"
 
 const Saved = () => {
   const [category, setCategory] = useState<CategoryProps[]>([])
+  const [StoredData, setStoredData] = useState<StoreDataProps[]>([])
 
   useEffect(() => {
     const fetchLabel = async () => {
-      const label = await getLabelsByUser()
-      console.log("Label:", label)
-      setCategory(label)
+      const labels = await getLabelsByUser()
+      console.log("Label:", labels)
+      labels.forEach((labels: any) => {
+        console.log("Label ID:", labels.id) // Ensure IDs are correct
+      })
+      setCategory(labels)
     }
 
     fetchLabel() // Call the function to fetch labels
   }, [])
+
+  useEffect(() => {
+    const FetchStore_data = async () => {
+      const data = await getStoredData()
+      setStoredData(data)
+    }
+    FetchStore_data()
+  }, [])
+
+  const deleteLabels = async (id: string) => {
+    console.log("deleting item", id)
+    const deleted = await deleteLabel(id)
+    if (deleted) {
+      console.log("Label deleted successfully")
+    } else {
+      console.log("Failed to delete label")
+    }
+  }
 
   return (
     <SafeAreaView>
@@ -59,6 +88,9 @@ const Saved = () => {
                 <Text style={[styles.categoryText, { color: "#fff" }]}>
                   {item.name}
                 </Text>
+                <TouchableOpacity onPress={() => deleteLabels(item.id!)}>
+                  <MaterialIcons name="delete" size={24} color="black" />
+                </TouchableOpacity>
               </View>
             )}
             horizontal
@@ -67,18 +99,21 @@ const Saved = () => {
         </View>
 
         <View style={styles.noPasswordContainer}>
-          {/* Placeholder for password cards; replace with actual data later */}
-          <Passwordcard
-            title="Facebook"
-            emailOrNumber="98765456789"
-            address={() => router.push("/(tabs)/ViewDetails")}
-            color="#000"
-          />
-          <Passwordcard
-            title="Gmail"
-            emailOrNumber="98765456789"
-            address={() => router.push("/(tabs)/ViewDetails")}
-            color="#f44336"
+          <FlatList
+            data={StoredData}
+            renderItem={({ item }) => (
+              <Passwordcard
+                title={item.title} // Assuming `StoredData` has title
+                emailOrNumber={item.contact_info} // Assuming `StoredData` has emailOrNumber
+                address={() =>
+                  router.push({
+                    pathname: "/(tabs)/ViewDetails/[id]",
+                    params: { id: item.id! },
+                  })
+                }
+                color="#000"
+              />
+            )}
           />
         </View>
       </View>

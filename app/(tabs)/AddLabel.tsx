@@ -39,8 +39,6 @@ const AddLabel = () => {
     }
 
     await addLabel(label!, currentColor)
-    console.log("label", label)
-    console.log("current color ", currentColor)
     showToast({ type: "success", text: "Label successfully created" })
     router.back()
   }

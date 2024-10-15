@@ -5,12 +5,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import CustomBackButton from "@/components/CustomBackButton"
 import Viewdetailscard from "@/components/Viewdetailscard"
 import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
-import { router } from "expo-router"
+import { router, useLocalSearchParams } from "expo-router"
+import { getStoreDatabyId } from "@/configs/Firebase.config"
+import { StoreDataProps } from "@/types/Label.types"
 
 interface viewdetailsProps {
   title: string
@@ -27,6 +29,19 @@ const ViewDetails = ({
   emailorphone,
   password,
 }: viewdetailsProps) => {
+  const { id } = useLocalSearchParams()
+  const [details, setDetails] = useState<StoreDataProps>()
+
+  useEffect(() => {
+    const fetchStoreDataById = async () => {
+      const data = await getStoreDatabyId(
+        "05e497b9-f3b5-4a80-aa4c-86c29f46f60b"
+      )
+      console.log("data", data)
+    }
+    fetchStoreDataById()
+  }, [id])
+
   return (
     <SafeAreaView>
       <View
