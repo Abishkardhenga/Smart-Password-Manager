@@ -2,6 +2,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
 import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
+import Skeleton from "react-native-reanimated-skeleton"
+
 import { showToast } from "@/utilis/Toast.message"
 
 interface viewdetailCardProps {

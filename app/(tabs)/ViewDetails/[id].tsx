@@ -34,6 +34,7 @@ const ViewDetails = ({
 
   useEffect(() => {
     const fetchStoreDataById = async () => {
+      setDetails(null)
       if (id) {
         const data = await getStoreDatabyId(id as string)
         setDetails(data as StoreDataProps)

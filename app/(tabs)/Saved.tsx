@@ -33,8 +33,8 @@ const Saved = () => {
     const deleted = await deleteLabel(id)
 
     if (deleted) {
-      fetchLabel()
       showToast({ type: "success", text: "Successfully deleted label" })
+      fetchLabel()
       console.log("Label deleted successfully")
     } else {
       showToast({ type: "danger", text: "Failed to delete label" })

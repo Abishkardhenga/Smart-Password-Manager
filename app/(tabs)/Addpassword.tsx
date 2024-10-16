@@ -34,11 +34,6 @@ const Addpassword = () => {
   const [category, setCategory] = useState<CategoryProps[]>([])
 
   const onAddPassword = async () => {
-    console.log("Selected Category:", selectedCategory)
-    console.log("Title:", title)
-    console.log("Website:", website)
-    console.log("Contact Info:", contactinfo)
-    console.log("Password:", password)
     if (!selectedCategory || !title || !website || !contactinfo || !password) {
       showToast({ type: "warning", text: "Please fill in all the details" })
       return
