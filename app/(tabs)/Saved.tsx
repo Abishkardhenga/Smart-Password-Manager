@@ -3,7 +3,6 @@ import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import React, { useEffect, useState } from "react"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
-
 import {
   SafeAreaView,
   View,
@@ -20,43 +19,40 @@ import {
   getStoredData,
 } from "@/configs/Firebase.config"
 import { CategoryProps } from "./Addpassword"
-import uuid from "react-native-uuid"
 import { StoreDataProps } from "@/types/Label.types"
+import { showToast } from "@/utilis/Toast.message"
+import { useLabel } from "@/Hooks/useLabel"
 
 const Saved = () => {
-  const [category, setCategory] = useState<CategoryProps[]>([])
   const [StoredData, setStoredData] = useState<StoreDataProps[]>([])
 
-  useEffect(() => {
-    const fetchLabel = async () => {
-      const labels = await getLabelsByUser()
-      console.log("Label:", labels)
-      labels.forEach((labels: any) => {
-        console.log("Label ID:", labels.id) // Ensure IDs are correct
-      })
-      setCategory(labels)
-    }
-
-    fetchLabel() // Call the function to fetch labels
-  }, [])
-
-  useEffect(() => {
-    const FetchStore_data = async () => {
-      const data = await getStoredData()
-      setStoredData(data)
-    }
-    FetchStore_data()
-  }, [])
+  const { Label, fetchLabel, setLabel } = useLabel()
 
   const deleteLabels = async (id: string) => {
-    console.log("deleting item", id)
+    console.log("Deleting item", id)
     const deleted = await deleteLabel(id)
+
     if (deleted) {
+      fetchLabel()
+      showToast({ type: "success", text: "Successfully deleted label" })
       console.log("Label deleted successfully")
     } else {
+      showToast({ type: "danger", text: "Failed to delete label" })
       console.log("Failed to delete label")
     }
   }
+
+  useEffect(() => {
+    fetchLabel()
+  }, [fetchLabel])
+
+  useEffect(() => {
+    const fetchStoredData = async () => {
+      const data = await getStoredData()
+      setStoredData(data)
+    }
+    fetchStoredData()
+  }, [])
 
   return (
     <SafeAreaView>
@@ -71,18 +67,19 @@ const Saved = () => {
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>
         </View>
+
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TouchableOpacity onPress={() => router.push("/(tabs)/AddLabel")}>
             <Ionicons name="add-circle-outline" size={54} color="#f44336" />
           </TouchableOpacity>
 
           <FlatList
-            data={category} // Use the dynamic category data
+            data={Label}
             renderItem={({ item }) => (
               <View
                 style={[
                   styles.categoryContainer,
-                  { backgroundColor: item.color || "#ccc" }, // Use a default color if not provided
+                  { backgroundColor: item.color || "#ccc" },
                 ]}
               >
                 <Text style={[styles.categoryText, { color: "#fff" }]}>
@@ -103,8 +100,8 @@ const Saved = () => {
             data={StoredData}
             renderItem={({ item }) => (
               <Passwordcard
-                title={item.title} // Assuming `StoredData` has title
-                emailOrNumber={item.contact_info} // Assuming `StoredData` has emailOrNumber
+                title={item.title}
+                emailOrNumber={item.contact_info}
                 address={() =>
                   router.push({
                     pathname: "/(tabs)/ViewDetails/[id]",

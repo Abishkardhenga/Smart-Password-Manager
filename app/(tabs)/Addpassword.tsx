@@ -33,16 +33,6 @@ const Addpassword = () => {
 
   const [category, setCategory] = useState<CategoryProps[]>([])
 
-  useEffect(() => {
-    const fetchLabel = async () => {
-      const label = await getLabelsByUser()
-      console.log("Label:", label)
-      setCategory(label)
-    }
-
-    fetchLabel() // Call the function to fetch labels
-  }, [])
-
   const onAddPassword = async () => {
     console.log("Selected Category:", selectedCategory)
     console.log("Title:", title)
@@ -74,6 +64,16 @@ const Addpassword = () => {
     setContactinfo(""), setPassword(""), setTitle("")
     setWebsite("")
   }
+
+  useEffect(() => {
+    const fetchLabel = async () => {
+      const label = await getLabelsByUser()
+      console.log("Label:", label)
+      setCategory(label)
+    }
+
+    fetchLabel() // Call the function to fetch labels
+  }, [])
 
   const renderCategoryButton = ({
     name,

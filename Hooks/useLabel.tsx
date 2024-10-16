@@ -1,18 +1,23 @@
 import { getLabelsByUser } from "@/configs/Firebase.config"
 import { LabelProps } from "@/types/Label.types"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
-const useLabel = () => {
-  const [Label, setLabel] = useState<LabelProps[]>()
-  useEffect(() => {
-    const fetchLabel = async () => {
+export const useLabel = () => {
+  const [Label, setLabel] = useState<LabelProps[]>([]) // Start with an empty array
+
+  const fetchLabel = async () => {
+    try {
       const data = await getLabelsByUser()
-      setLabel(data)
+      console.log("hook", data)
+      setLabel(data) // Update the state with fetched labels
+    } catch (error) {
+      console.error("Error fetching labels:", error)
     }
+  }
 
-    fetchLabel()
-  }, [Label])
-  return [Label]
+  useEffect(() => {
+    fetchLabel() // Fetch labels on mount
+  }, [])
+
+  return { Label, fetchLabel, setLabel } // Expose fetchLabel for external calls
 }
-
-export default useLabel

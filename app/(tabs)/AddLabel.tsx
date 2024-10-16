@@ -18,6 +18,7 @@ import { showToast } from "@/utilis/Toast.message"
 import { addLabel } from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { useLabel } from "@/Hooks/useLabel"
 
 interface CategoryProps {
   label: string
@@ -26,11 +27,12 @@ interface CategoryProps {
 }
 
 const AddLabel = () => {
-  const [label, setLabel] = useState<string>()
+  const [label, setLabel] = useState<string>("")
   const [editMode, setEditMode] = useState<boolean>(false)
   const [currentColor, setCurrentColor] = useState<string>("")
 
   const { userData, setUserData } = useContext(CreateUserContext)
+  const { fetchLabel } = useLabel()
 
   const onSaveLabel = async () => {
     if (label === "" || !currentColor) {
@@ -38,9 +40,15 @@ const AddLabel = () => {
       return
     }
 
-    await addLabel(label!, currentColor)
+    await addLabel(label, currentColor) // Assuming this function updates the Firestore
     showToast({ type: "success", text: "Label successfully created" })
+
+    // Fetch updated labels from the context
+    fetchLabel() // This should be used from the hook
+
     router.back()
+    setLabel("")
+    setCurrentColor("")
   }
 
   return (

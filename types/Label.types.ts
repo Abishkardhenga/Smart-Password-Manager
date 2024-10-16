@@ -1,7 +1,8 @@
  export interface LabelProps {
+   id?:string
     color:string 
     name:string
-    user_id:string
+    user_id?:string
  } 
 
 
