@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import { Colors } from "@/constants/Colors"
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 
 const Setting = () => {
   return (
@@ -13,6 +14,10 @@ const Setting = () => {
         <View style={styles.optionContainer}>
           <Ionicons name="person" size={24} color={Colors.BLACK} />
           <Text style={styles.optionText}>My Information</Text>
+        </View>
+        <View style={styles.optionContainer}>
+          <MaterialIcons name="label" size={24} color={Colors.BLACK} />
+          <Text style={styles.optionText}>Label</Text>
         </View>
         <View style={styles.optionContainer}>
           <FontAwesome5 name="key" size={24} color={Colors.BLACK} />
