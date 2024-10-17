@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +14,7 @@ import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
 import { addStoredData, getLabelsByUser } from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
+import { CreateUserContext } from "@/context/CreateUserContext"
 
 export interface CategoryProps {
   name: string
@@ -33,31 +34,49 @@ const Addpassword = () => {
 
   const [category, setCategory] = useState<CategoryProps[]>([])
 
+  const { refresh, setRefresh } = useContext(CreateUserContext)
+
   const onAddPassword = async () => {
-    if (!selectedCategory || !title || !website || !contactinfo || !password) {
-      showToast({ type: "warning", text: "Please fill in all the details" })
-      return
+    try {
+      if (
+        !selectedCategory ||
+        !title ||
+        !website ||
+        !contactinfo ||
+        !password
+      ) {
+        showToast({ type: "warning", text: "Please fill in all the details" })
+        return
+      }
+
+      const label_id = JSON.stringify(uuid.v4())
+      const label_name = selectedCategory
+
+      const storedata = await addStoredData(
+        label_id,
+        password,
+        title,
+        website,
+        contactinfo,
+        label_name
+      )
+
+      showToast({ type: "success", text: "Password successfully added" })
+      console.log("refres", refresh)
+      setRefresh(!refresh)
+      router.back()
+
+      setContactinfo("")
+      setPassword("")
+      setTitle("")
+      setWebsite("")
+    } catch (error) {
+      console.error("Error adding password:", error)
+      showToast({
+        type: "danger",
+        text: "Failed to add password. Please try again.",
+      })
     }
-
-    // Prepare the data
-    const label_id = JSON.stringify(uuid.v4()) // Generating label_id here
-    const label_name = selectedCategory
-
-    // Call addStoredData with the required individual parameters
-    const storedata = await addStoredData(
-      label_id,
-      password,
-      title,
-      website,
-      contactinfo,
-      label_name
-    )
-    console.log("stored data", storedata)
-
-    showToast({ type: "success", text: "Password successfully added" })
-    router.back()
-    setContactinfo(""), setPassword(""), setTitle("")
-    setWebsite("")
   }
 
   useEffect(() => {

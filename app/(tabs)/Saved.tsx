@@ -1,7 +1,7 @@
 import Passwordcard from "@/components/Passwordcard"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import {
   SafeAreaView,
@@ -13,20 +13,18 @@ import {
   FlatList,
 } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import {
-  deleteLabel,
-  getLabelsByUser,
-  getStoredData,
-} from "@/configs/Firebase.config"
-import { CategoryProps } from "./Addpassword"
+import { deleteLabel, getStoredData } from "@/configs/Firebase.config"
 import { StoreDataProps } from "@/types/Label.types"
 import { showToast } from "@/utilis/Toast.message"
 import { useLabel } from "@/Hooks/useLabel"
+import { CreateUserContext } from "@/context/CreateUserContext"
+import { useStoredData } from "@/Hooks/useStoredData"
 
 const Saved = () => {
-  const [StoredData, setStoredData] = useState<StoreDataProps[]>([])
-
   const { Label, fetchLabel, setLabel } = useLabel()
+  const { fetchStoredData, StoredData, setStoredData } = useStoredData()
+  const { userData, setUserData, refresh, setRefresh } =
+    useContext(CreateUserContext)
 
   const deleteLabels = async (id: string) => {
     console.log("Deleting item", id)
@@ -34,7 +32,7 @@ const Saved = () => {
 
     if (deleted) {
       showToast({ type: "success", text: "Successfully deleted label" })
-      fetchLabel()
+      setRefresh(!refresh)
       console.log("Label deleted successfully")
     } else {
       showToast({ type: "danger", text: "Failed to delete label" })
@@ -43,8 +41,12 @@ const Saved = () => {
   }
 
   useEffect(() => {
-    fetchLabel()
-  }, [fetchLabel])
+    const fetchApi = () => {
+      fetchLabel()
+      fetchStoredData()
+    }
+    fetchApi()
+  }, [refresh])
 
   useEffect(() => {
     const fetchStoredData = async () => {
@@ -98,6 +100,7 @@ const Saved = () => {
         <View style={styles.noPasswordContainer}>
           <FlatList
             data={StoredData}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <Passwordcard
                 title={item.title}

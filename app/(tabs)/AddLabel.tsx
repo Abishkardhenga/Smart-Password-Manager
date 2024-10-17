@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -31,7 +31,8 @@ const AddLabel = () => {
   const [editMode, setEditMode] = useState<boolean>(false)
   const [currentColor, setCurrentColor] = useState<string>("")
 
-  const { userData, setUserData } = useContext(CreateUserContext)
+  const { userData, setUserData, refresh, setRefresh } =
+    useContext(CreateUserContext)
   const { fetchLabel } = useLabel()
 
   const onSaveLabel = async () => {
@@ -40,17 +41,25 @@ const AddLabel = () => {
       return
     }
 
-    await addLabel(label, currentColor) // Assuming this function updates the Firestore
-    showToast({ type: "success", text: "Label successfully created" })
+    try {
+      await addLabel(label, currentColor)
 
-    // Fetch updated labels from the context
-    fetchLabel() // This should be used from the hook
+      showToast({ type: "success", text: "Label successfully created" })
+      setRefresh(!refresh)
 
-    router.back()
-    setLabel("")
-    setCurrentColor("")
+      setLabel("")
+      setCurrentColor("")
+      router.back()
+    } catch (error) {
+      // Handle failure case and show error message
+      showToast({ type: "danger", text: "Failed to add the label" })
+      console.error("Error adding label:", error) // Log the error for debugging
+    }
   }
 
+  useEffect(() => {
+    fetchLabel()
+  }, [refresh])
   return (
     <SafeAreaView>
       <ScrollView
