@@ -16,6 +16,8 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   const [userData, setUserData] = useState(null)
   const [refresh, setRefresh] = useState(false)
+  const [editStoredData, setEditStoredData] = useState(false)
+  const [editLabel, setEditLabel] = useState(false)
 
   useEffect(() => {
     SplashScreen.hideAsync()
@@ -23,7 +25,16 @@ export default function RootLayout() {
 
   return (
     <CreateUserContext.Provider
-      value={{ userData, setUserData, refresh, setRefresh }}
+      value={{
+        userData,
+        setUserData,
+        refresh,
+        setRefresh,
+        editStoredData,
+        setEditStoredData,
+        editLabel,
+        setEditLabel,
+      }}
     >
       <ToastProvider>
         <Stack

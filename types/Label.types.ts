@@ -33,5 +33,13 @@ export interface updatedFields {
  
  }
 
+ export interface viewdetailsProps {
+   title: string
+   website: string
+   Label?: string
+   emailorphone: string
+   password: string
+ }
+
 
  

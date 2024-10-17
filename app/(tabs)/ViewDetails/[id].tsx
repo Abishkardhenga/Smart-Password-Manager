@@ -14,32 +14,21 @@ import { router, useLocalSearchParams } from "expo-router"
 import { getStoreDatabyId } from "@/configs/Firebase.config"
 import { StoreDataProps } from "@/types/Label.types"
 
-interface viewdetailsProps {
-  title: string
-  website: string
-  Label?: string
-  emailorphone: string
-  password: string
-}
-
-const ViewDetails = ({
-  title,
-  website,
-  Label,
-  emailorphone,
-  password,
-}: viewdetailsProps) => {
+const ViewDetails = () => {
   const { id } = useLocalSearchParams()
-  const [details, setDetails] = useState<StoreDataProps | null>(null) // Store fetched details
+  const [details, setDetails] = useState<StoreDataProps | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchStoreDataById = async () => {
-      setDetails(null)
+      setIsLoading(true)
       if (id) {
         const data = await getStoreDatabyId(id as string)
         setDetails(data as StoreDataProps)
       }
+      setIsLoading(false)
     }
+
     fetchStoreDataById()
   }, [id])
 
@@ -53,14 +42,31 @@ const ViewDetails = ({
         }}
       >
         <CustomBackButton label="View Details" />
-        <Viewdetailscard title="Title" value={details?.title!} />
-        <Viewdetailscard title="Website" value={details?.website!} />
-        <Viewdetailscard title="Label" value={details?.label_name!} />
+        <Viewdetailscard
+          title="Title"
+          value={details?.title!}
+          isLoading={isLoading}
+        />
+        <Viewdetailscard
+          title="Website"
+          value={details?.website!}
+          isLoading={isLoading}
+        />
+        <Viewdetailscard
+          title="Label"
+          value={details?.label_name!}
+          isLoading={isLoading}
+        />
         <Viewdetailscard
           title="Email/Phone no."
           value={details?.contact_info!}
+          isLoading={isLoading}
         />
-        <Viewdetailscard title="Password" value={details?.password!} />
+        <Viewdetailscard
+          title="Password"
+          value={details?.password!}
+          isLoading={isLoading}
+        />
         <TouchableOpacity
           style={{
             position: "absolute",
