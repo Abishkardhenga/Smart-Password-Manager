@@ -12,7 +12,7 @@
     label_name?:string
     contact_info:string
     title:string 
-    user_id:string
+    user_id?:string
     website:string
     password:string
  }

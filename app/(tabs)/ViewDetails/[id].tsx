@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import CustomBackButton from "@/components/CustomBackButton"
 import Viewdetailscard from "@/components/Viewdetailscard"
 import Feather from "@expo/vector-icons/Feather"
@@ -13,6 +13,7 @@ import { Colors } from "@/constants/Colors"
 import { router, useLocalSearchParams } from "expo-router"
 import { getStoreDatabyId } from "@/configs/Firebase.config"
 import { StoreDataProps } from "@/types/Label.types"
+import { CreateUserContext } from "@/context/CreateUserContext"
 
 const ViewDetails = () => {
   const { id } = useLocalSearchParams()
@@ -31,6 +32,20 @@ const ViewDetails = () => {
 
     fetchStoreDataById()
   }, [id])
+
+  const {
+    editStoredData,
+    setEditStoredData,
+    StoreDataforedit,
+    setStoreDataforedit,
+  } = useContext(CreateUserContext)
+
+  const onPressEdit = () => {
+    router.push("/Addpassword")
+
+    setEditStoredData(true)
+    setStoreDataforedit(details)
+  }
 
   return (
     <SafeAreaView>
@@ -73,7 +88,7 @@ const ViewDetails = () => {
             bottom: 42,
             right: 12,
           }}
-          onPress={() => router.push("/Addpassword")}
+          onPress={() => onPressEdit()}
         >
           <Feather name="edit" size={36} color={Colors.BLACK} />
         </TouchableOpacity>

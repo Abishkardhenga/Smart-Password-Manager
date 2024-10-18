@@ -10,6 +10,7 @@ import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import "react-native-reanimated"
 import { ToastProvider } from "react-native-toast-notifications"
+import { LabelProps, StoreDataProps } from "@/types/Label.types"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -18,6 +19,8 @@ export default function RootLayout() {
   const [refresh, setRefresh] = useState(false)
   const [editStoredData, setEditStoredData] = useState(false)
   const [editLabel, setEditLabel] = useState(false)
+  const [StoreDataforedit, setStoreDataforedit] =
+    useState<StoreDataProps | null>(null)
 
   useEffect(() => {
     SplashScreen.hideAsync()
@@ -34,6 +37,8 @@ export default function RootLayout() {
         setEditStoredData,
         editLabel,
         setEditLabel,
+        StoreDataforedit,
+        setStoreDataforedit,
       }}
     >
       <ToastProvider>

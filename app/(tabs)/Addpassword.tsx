@@ -26,7 +26,6 @@ export interface CategoryProps {
 
 const Addpassword = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("")
-  const [editMode, setEditMode] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
   const [website, setWebsite] = useState<string>("")
   const [contactinfo, setContactinfo] = useState<string>("")
@@ -34,7 +33,22 @@ const Addpassword = () => {
 
   const [category, setCategory] = useState<CategoryProps[]>([])
 
-  const { refresh, setRefresh } = useContext(CreateUserContext)
+  const {
+    refresh,
+    setRefresh,
+    editStoredData,
+    setEditStoredData,
+    StoreDataforedit,
+    setStoreDataforedit,
+  } = useContext(CreateUserContext)
+
+  useEffect(() => {
+    setContactinfo(StoreDataforedit?.contact_info!)
+    setPassword(StoreDataforedit?.password!)
+    setTitle(StoreDataforedit?.title!)
+    setWebsite(StoreDataforedit?.website!)
+    setSelectedCategory(StoreDataforedit?.label_name!)
+  }, [editStoredData])
 
   const onAddPassword = async () => {
     try {
@@ -75,6 +89,48 @@ const Addpassword = () => {
       showToast({
         type: "danger",
         text: "Failed to add password. Please try again.",
+      })
+    }
+  }
+
+  const onPressUpdate = async () => {
+    try {
+      if (
+        !selectedCategory ||
+        !title ||
+        !website ||
+        !contactinfo ||
+        !password
+      ) {
+        showToast({ type: "warning", text: "Please fill in all the details" })
+        return
+      }
+
+      const label_id = JSON.stringify(uuid.v4())
+      const label_name = selectedCategory
+
+      const storedata = await addStoredData(
+        label_id,
+        password,
+        title,
+        website,
+        contactinfo,
+        label_name
+      )
+
+      showToast({ type: "success", text: "Password successfully updated" })
+      setRefresh(!refresh)
+      router.back()
+
+      setContactinfo("")
+      setPassword("")
+      setTitle("")
+      setWebsite("")
+    } catch (error) {
+      console.error("Error adding password:", error)
+      showToast({
+        type: "danger",
+        text: "Failed to update password. Please try again.",
       })
     }
   }
@@ -129,7 +185,7 @@ const Addpassword = () => {
       >
         <View style={styles.container}>
           <Text style={styles.title}>
-            {editMode ? "Edit Password" : "Add New Password"}
+            {editStoredData ? "Edit Password" : "Add New Password"}
           </Text>
           <Text style={styles.subtitle}>Add new password to your records</Text>
 
@@ -171,8 +227,8 @@ const Addpassword = () => {
 
           <CustomButton
             color={Colors.BLACK}
-            text={editMode ? "Update Password" : "Save Password"}
-            onPress={() => onAddPassword()}
+            text={editStoredData ? "Update Password" : "Save Password"}
+            onPress={() => (editStoredData ? onPressUpdate() : onAddPassword())}
           />
         </View>
       </ScrollView>

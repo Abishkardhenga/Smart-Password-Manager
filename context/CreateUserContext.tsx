@@ -1,5 +1,5 @@
-import { StoreDataProps } from "@/types/Label.types"
 import { createContext } from "react"
+import { LabelProps, StoreDataProps } from "@/types/Label.types"
 
 type ContextData = {
   userData: any
@@ -10,8 +10,11 @@ type ContextData = {
   setEditStoredData: (data: boolean) => void
   editLabel: boolean
   setEditLabel: (data: boolean) => void
+  StoreDataforedit: StoreDataProps | null
+  setStoreDataforedit: (data: StoreDataProps | null) => void
 }
 
+// Initialize the context with default values
 export const CreateUserContext = createContext<ContextData>({
   userData: null,
   setUserData: () => {},
@@ -21,4 +24,6 @@ export const CreateUserContext = createContext<ContextData>({
   setEditStoredData: () => {},
   editLabel: false,
   setEditLabel: () => {},
+  StoreDataforedit: null,
+  setStoreDataforedit: () => {},
 })
