@@ -12,7 +12,11 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
-import { addStoredData, getLabelsByUser } from "@/configs/Firebase.config"
+import {
+  addStoredData,
+  editStoredDataa,
+  getLabelsByUser,
+} from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 
@@ -30,6 +34,7 @@ const Addpassword = () => {
   const [website, setWebsite] = useState<string>("")
   const [contactinfo, setContactinfo] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [storeDataId, setStoreDataId] = useState<string>("")
 
   const [category, setCategory] = useState<CategoryProps[]>([])
 
@@ -48,6 +53,7 @@ const Addpassword = () => {
     setTitle(StoreDataforedit?.title!)
     setWebsite(StoreDataforedit?.website!)
     setSelectedCategory(StoreDataforedit?.label_name!)
+    setStoreDataId(StoreDataforedit?.id!)
   }, [editStoredData])
 
   const onAddPassword = async () => {
@@ -106,32 +112,63 @@ const Addpassword = () => {
         return
       }
 
-      const label_id = JSON.stringify(uuid.v4())
+      const label_id = StoreDataforedit?.label_id!
       const label_name = selectedCategory
+      const contact_info = contactinfo
 
-      const storedata = await addStoredData(
+      if (!storeDataId) {
+        showToast({
+          type: "danger",
+          text: "Error: No valid ID found for the stored data.",
+        })
+        return
+      }
+
+      const updateSuccess = await editStoredDataa(storeDataId, {
         label_id,
         password,
         title,
         website,
-        contactinfo,
-        label_name
-      )
+        label_name,
+        contact_info,
+      })
 
-      showToast({ type: "success", text: "Password successfully updated" })
-      setRefresh(!refresh)
-      router.back()
+      if (updateSuccess) {
+        showToast({ type: "success", text: "Password successfully updated" })
+        setRefresh(!refresh)
+        router.back()
 
-      setContactinfo("")
-      setPassword("")
-      setTitle("")
-      setWebsite("")
+        // Reset fields
+        setContactinfo("")
+        setPassword("")
+        setTitle("")
+        setWebsite("")
+        setStoreDataforedit(null)
+      } else {
+        showToast({
+          type: "danger",
+          text: "Failed to update password. Please try again.",
+        })
+        setContactinfo("")
+        setPassword("")
+        setTitle("")
+        setWebsite("")
+
+        setStoreDataforedit(null)
+      }
     } catch (error) {
-      console.error("Error adding password:", error)
+      console.error("Error updating password:", error)
+
       showToast({
         type: "danger",
         text: "Failed to update password. Please try again.",
       })
+      setContactinfo("")
+      setPassword("")
+      setTitle("")
+      setWebsite("")
+
+      setStoreDataforedit(null)
     }
   }
 

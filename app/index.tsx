@@ -20,10 +20,8 @@ const Index = () => {
   const getStarted = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, navigate to the main app
         router.push("/(tabs)/")
       } else {
-        // User is not signed in, navigate to signup
         router.push("/(auth)/Signup")
       }
     })

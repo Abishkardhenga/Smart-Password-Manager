@@ -8,7 +8,6 @@ export const useLabel = () => {
   const fetchLabel = async () => {
     try {
       const data = await getLabelsByUser()
-      console.log("use label hook ", data)
       setLabel(data) // Update the state with fetched labels
     } catch (error) {
       console.error("Error fetching labels:", error)

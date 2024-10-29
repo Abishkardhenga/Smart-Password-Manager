@@ -54,6 +54,7 @@ const TabLayout = () => {
           tabBarButton: () => null, // Hides from the tab bar
         }}
       />
+
       <Tabs.Screen
         name="ViewDetails/[id]"
         options={{
@@ -64,6 +65,12 @@ const TabLayout = () => {
         name="AddLabel"
         options={{
           tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="Label/[id]"
+        options={{
+          tabBarButton: () => null, // Hides from the tab bar
         }}
       />
     </Tabs>

@@ -22,12 +22,12 @@ const ViewDetails = () => {
 
   useEffect(() => {
     const fetchStoreDataById = async () => {
-      setIsLoading(true)
       if (id) {
+        setIsLoading(true)
         const data = await getStoreDatabyId(id as string)
         setDetails(data as StoreDataProps)
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }
 
     fetchStoreDataById()
@@ -42,20 +42,20 @@ const ViewDetails = () => {
 
   const onPressEdit = () => {
     router.push("/Addpassword")
-
     setEditStoredData(true)
     setStoreDataforedit(details)
   }
 
+  useEffect(() => {
+    return () => {
+      setEditStoredData(false)
+      setStoreDataforedit(null)
+    }
+  }, [editStoredData])
+
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          height: "100%",
-          width: "100%",
-          padding: 20,
-        }}
-      >
+    <SafeAreaView key={id as string}>
+      <View style={styles.container}>
         <CustomBackButton label="View Details" />
         <Viewdetailscard
           title="Title"
@@ -82,14 +82,7 @@ const ViewDetails = () => {
           value={details?.password!}
           isLoading={isLoading}
         />
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            bottom: 42,
-            right: 12,
-          }}
-          onPress={() => onPressEdit()}
-        >
+        <TouchableOpacity style={styles.editButton} onPress={onPressEdit}>
           <Feather name="edit" size={36} color={Colors.BLACK} />
         </TouchableOpacity>
       </View>
@@ -99,4 +92,15 @@ const ViewDetails = () => {
 
 export default ViewDetails
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    width: "100%",
+    padding: 20,
+  },
+  editButton: {
+    position: "absolute",
+    bottom: 42,
+    right: 12,
+  },
+})

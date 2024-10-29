@@ -8,7 +8,6 @@ export const useStoredData = () => {
   const fetchStoredData = async () => {
     try {
       const data = await getStoredData()
-      console.log("use stored data hook ", data)
       setStoredData(data)
     } catch (error) {
       console.error("Error fetching labels:", error)

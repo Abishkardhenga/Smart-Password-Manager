@@ -78,7 +78,13 @@ const Saved = () => {
           <FlatList
             data={Label}
             renderItem={({ item }) => (
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  router.push({
+                    pathname: "/(tabs)/Label/[id]",
+                    params: { id: item.id! },
+                  })
+                }}
                 style={[
                   styles.categoryContainer,
                   { backgroundColor: item.color || "#ccc" },
@@ -90,7 +96,7 @@ const Saved = () => {
                 <TouchableOpacity onPress={() => deleteLabels(item.id!)}>
                   <MaterialIcons name="delete" size={24} color="black" />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             )}
             horizontal
             showsHorizontalScrollIndicator={false}
