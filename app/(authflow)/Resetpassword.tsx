@@ -10,39 +10,21 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
+import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { signup } from "@/configs/Firebase.config"
+import { login } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
 
-const Signup = () => {
+const Resetpassword = () => {
   const [email, setEmail] = useState<string>("")
-  const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
   const { userData, setUserData } = useContext(CreateUserContext)
 
-  const onCreateAccount = async (
-    email: string,
-    password: string,
-    name: string
-  ) => {
-    if (!email || !password || !name) {
-      showToast({ type: "danger", text: "Enter all the details" })
-      console.log("Please fill in all details")
-
-      return
-    }
-
-    const data = await signup(email, password, name)
-    setUserData(data)
-    showToast({ type: "success", text: "Signup Successfully" })
-
-    router.push("/(tabs)/")
-    console.log("Data on signup:", data)
-  }
+  const resetPassword = () => {}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,59 +32,37 @@ const Signup = () => {
 
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Create User Account</Text>
-          <Text style={styles.subtitle}>Become a New User</Text>
+          <Text style={styles.title}>Reset Password !!!</Text>
         </View>
 
         <View style={styles.inputContainer}>
           <CustomInput
-            label="Name"
-            placeholder="Aabiskar Dhenga"
-            secureTextEntry={false}
-            value={name}
-            onChangeText={setName}
+            label=" "
+            placeholder="New  password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
           />
           <CustomInput
-            label="Email"
-            placeholder="example@gmail.com"
-            secureTextEntry={false}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <CustomInput
-            label="Password"
-            placeholder="Enter your password"
+            label=" "
+            placeholder="Enter  password Again"
             secureTextEntry={true}
             value={password}
             onChangeText={setPassword}
           />
         </View>
 
-        <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>Remember me </Text>
-          <TouchableOpacity onPress={() => router.push("/Forgetpassword")}>
-            <Text style={styles.linkText}> Forget Password ? </Text>
-          </TouchableOpacity>
-        </View>
-
         <CustomButton
-          text="Sign Up"
+          text="Reset Password"
           color={Colors.GREEN}
-          onPress={() => onCreateAccount(email, password, name)}
+          onPress={() => {}}
         />
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => router.replace("/(auth)/Login")}>
-            <Text style={styles.signinText}>Sign In</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </SafeAreaView>
   )
 }
 
-export default Signup
+export default Resetpassword
 
 const styles = StyleSheet.create({
   container: {
@@ -117,19 +77,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   headerContainer: {
-    alignItems: "flex-start",
-    marginBottom: 20,
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: Colors.BLACK,
-    marginBottom: 5,
   },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.BLACK,
-  },
+
   inputContainer: {
     width: "100%",
     marginBottom: 20,
@@ -158,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.BLACK,
   },
-  signinText: {
+  signUpText: {
     fontSize: 14,
     color: Colors.GREEN,
     fontWeight: "bold",

@@ -6,44 +6,70 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native"
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback, useContext } from "react"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { Colors } from "@/constants/Colors"
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
-import { getLabelsByUser, logout } from "@/configs/Firebase.config"
+import { deleteLabel, getLabelsByUser, logout } from "@/configs/Firebase.config"
 import { LabelProps } from "@/types/Label.types"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import Feather from "@expo/vector-icons/Feather"
 import Entypo from "@expo/vector-icons/Entypo"
+import { useLabel } from "@/Hooks/useLabel"
+import { CreateUserContext } from "@/context/CreateUserContext"
+import { showToast } from "@/utilis/Toast.message"
+import { router } from "expo-router"
 
 const Setting = () => {
-  const [Labels, setLabels] = useState<LabelProps[]>([])
   const [openedMenuLabelId, setOpenedMenuLabelId] = useState<string | null>(
     null
   )
+  const { Label, fetchLabel, setLabel } = useLabel()
+
   const [isLabelOpened, setIsLabelOpened] = useState<boolean>(false)
+  const {
+    userData,
+    setUserData,
+    refresh,
+    setRefresh,
+    setLabelDataforedit,
+    setIsEditLabel,
+  } = useContext(CreateUserContext)
 
   const onPressLogout = async () => {
     await logout()
   }
 
-  const getLabelByUser = async () => {
-    try {
-      const label = await getLabelsByUser()
-      setLabels(label)
-      console.log("all labels ", label)
-    } catch (error) {
-      console.error("Error fetching labels: ", error)
+  const deleteLabels = async (id: string) => {
+    console.log("Deleting item", id)
+    const deleted = await deleteLabel(id)
+
+    if (deleted) {
+      showToast({ type: "success", text: "Successfully deleted label" })
+      setRefresh(!refresh)
+      console.log("Label deleted successfully")
+    } else {
+      showToast({ type: "danger", text: "Failed to delete label" })
+      console.log("Failed to delete label")
     }
   }
 
   useEffect(() => {
-    getLabelByUser()
-  }, [])
+    const fetchLabelByUser = () => {
+      fetchLabel()
+    }
+    fetchLabelByUser()
+  }, [refresh])
 
   const toggleMenu = (labelId: string) => {
     setOpenedMenuLabelId((prev) => (prev === labelId ? null : labelId))
+  }
+
+  const onPressEditLabel = (item: LabelProps) => {
+    router.push("/(tabs)/AddLabel")
+    setIsEditLabel(true)
+    setLabelDataforedit(item)
   }
 
   const renderLabelItem = useCallback(
@@ -55,10 +81,16 @@ const Setting = () => {
         </TouchableOpacity>
         {openedMenuLabelId === item.id && (
           <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuIcon} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.menuIcon}
+              onPress={() => deleteLabels(item.id!)}
+            >
               <MaterialIcons name="delete" size={24} color={Colors.BLACK} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuIcon} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.menuIcon}
+              onPress={() => onPressEditLabel(item)}
+            >
               <Feather name="edit" size={24} color={Colors.BLACK} />
             </TouchableOpacity>
           </View>
@@ -85,7 +117,7 @@ const Setting = () => {
             <Text style={styles.optionText}>Label</Text>
           </TouchableOpacity>
           {isLabelOpened && (
-            <FlatList data={Labels} renderItem={renderLabelItem} />
+            <FlatList data={Label} renderItem={renderLabelItem} />
           )}
         </View>
         <View style={styles.optionContainer}>

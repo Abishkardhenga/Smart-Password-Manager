@@ -26,20 +26,6 @@ const Saved = () => {
   const { userData, setUserData, refresh, setRefresh } =
     useContext(CreateUserContext)
 
-  const deleteLabels = async (id: string) => {
-    console.log("Deleting item", id)
-    const deleted = await deleteLabel(id)
-
-    if (deleted) {
-      showToast({ type: "success", text: "Successfully deleted label" })
-      setRefresh(!refresh)
-      console.log("Label deleted successfully")
-    } else {
-      showToast({ type: "danger", text: "Failed to delete label" })
-      console.log("Failed to delete label")
-    }
-  }
-
   useEffect(() => {
     const fetchApi = () => {
       fetchLabel()
@@ -93,9 +79,6 @@ const Saved = () => {
                 <Text style={[styles.categoryText, { color: "#fff" }]}>
                   {item.name}
                 </Text>
-                <TouchableOpacity onPress={() => deleteLabels(item.id!)}>
-                  <MaterialIcons name="delete" size={24} color="black" />
-                </TouchableOpacity>
               </TouchableOpacity>
             )}
             horizontal

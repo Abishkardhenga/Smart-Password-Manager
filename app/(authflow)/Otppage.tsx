@@ -18,75 +18,52 @@ import { login } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
 
-const Login = () => {
+const Otppage = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
   const { userData, setUserData } = useContext(CreateUserContext)
 
-  const onLogin = async (emai: string, password: string) => {
-    if (!email && !password) {
-      showToast({ type: "danger", text: "Enter all the details" })
-      return
-    }
-    const loginUser = await login(email, password)
-    setUserData(loginUser)
-    router.push("/(tabs)/")
-    console.log("loginUser", loginUser)
-    showToast({ type: "success", text: "Successfully login" })
-  }
+  const confirmOtp = () => {}
+
   return (
     <SafeAreaView style={styles.container}>
       <Authheader />
 
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Welcome Back !!!</Text>
+          <Text style={styles.title}>Forget Password</Text>
+          {/* <Text>
+            Enter the 6 digit Otp code that is sent through your email
+          </Text> */}
         </View>
-        <LoginScreenImg width={250} height={150} />
 
-        <View style={styles.inputContainer}>
-          <CustomInput
-            label="Email"
-            placeholder="example@gmail.com"
-            secureTextEntry={false}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <CustomInput
-            label="Password"
-            placeholder="Enter your password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+        <CustomInput
+          label=" "
+          placeholder="example@gmail.com"
+          secureTextEntry={false}
+          value={email}
+          onChangeText={setEmail}
+        />
 
         <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>Remember me</Text>
+          <Text style={styles.termsText}>Didn't get the code ?</Text>
           <TouchableOpacity>
-            <Text style={styles.linkText}> Forget Password ? </Text>
+            <Text style={styles.linkText}> Resend Code</Text>
           </TouchableOpacity>
         </View>
 
         <CustomButton
-          text="Login"
+          text="Verify email Address"
           color={Colors.GREEN}
-          onPress={() => onLogin(email, password)}
+          onPress={() => router.push("/Resetpassword")}
         />
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => router.replace("/(auth)/Signup")}>
-            <Text style={styles.signUpText}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </SafeAreaView>
   )
 }
 
-export default Login
+export default Otppage
 
 const styles = StyleSheet.create({
   container: {

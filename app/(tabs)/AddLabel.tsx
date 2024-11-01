@@ -15,10 +15,11 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
-import { addLabel } from "@/configs/Firebase.config"
+import { addLabel, editLabel } from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useLabel } from "@/Hooks/useLabel"
+import { useFocusEffect } from "@react-navigation/native"
 
 interface CategoryProps {
   label: string
@@ -28,11 +29,18 @@ interface CategoryProps {
 
 const AddLabel = () => {
   const [label, setLabel] = useState<string>("")
-  const [editMode, setEditMode] = useState<boolean>(false)
   const [currentColor, setCurrentColor] = useState<string>("")
 
-  const { userData, setUserData, refresh, setRefresh } =
-    useContext(CreateUserContext)
+  const {
+    userData,
+    setUserData,
+    refresh,
+    setRefresh,
+    IsEditLabel,
+    LabelDataforedit,
+    setLabelDataforedit,
+    setIsEditLabel,
+  } = useContext(CreateUserContext)
   const { fetchLabel } = useLabel()
 
   const onSaveLabel = async () => {
@@ -58,8 +66,38 @@ const AddLabel = () => {
   }
 
   useEffect(() => {
+    setLabel(LabelDataforedit?.name!)
+    setCurrentColor(LabelDataforedit?.color!)
+  }, [IsEditLabel])
+
+  const onUpdateLabel = async () => {
+    await editLabel(
+      LabelDataforedit?.id!,
+      LabelDataforedit?.name!,
+      LabelDataforedit?.color!
+    )
+    showToast({ type: "success", text: "Label successfully updated" })
+    setIsEditLabel(false)
+    setCurrentColor("")
+    setLabel("")
+    setLabelDataforedit(null)
+  }
+
+  useEffect(() => {
     fetchLabel()
   }, [refresh])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setIsEditLabel(false)
+        setCurrentColor("")
+        setLabel("")
+        setLabelDataforedit(null)
+      }
+    }, [])
+  )
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -68,7 +106,7 @@ const AddLabel = () => {
       >
         <View style={styles.container}>
           <Text style={styles.title}>
-            {editMode ? "Edit Label" : "Add New Label"}
+            {IsEditLabel ? "Edit Label" : "Add New Label"}
           </Text>
           <Text style={styles.subtitle}>Add new Label to your records</Text>
 
@@ -94,8 +132,8 @@ const AddLabel = () => {
 
           <CustomButton
             color={Colors.BLACK}
-            text={editMode ? "Update Label" : "Save Label"}
-            onPress={() => onSaveLabel()}
+            text={IsEditLabel ? "Update Label" : "Save Label"}
+            onPress={() => (IsEditLabel ? onUpdateLabel() : onSaveLabel())}
           />
         </View>
       </ScrollView>

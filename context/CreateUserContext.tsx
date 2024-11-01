@@ -6,24 +6,27 @@ type ContextData = {
   setUserData: (data: any) => void
   refresh: boolean
   setRefresh: (data: boolean) => void
-  editStoredData: boolean
-  setEditStoredData: (data: boolean) => void
-  editLabel: boolean
-  setEditLabel: (data: boolean) => void
+  IsEditStoredData: boolean
+  setIsEditStoredData: (data: boolean) => void
+  IsEditLabel: boolean
+  setIsEditLabel: (data: boolean) => void
   StoreDataforedit: StoreDataProps | null
   setStoreDataforedit: (data: StoreDataProps | null) => void
+  LabelDataforedit: LabelProps | null
+  setLabelDataforedit: (data: LabelProps | null) => void
 }
 
-// Initialize the context with default values
 export const CreateUserContext = createContext<ContextData>({
   userData: null,
   setUserData: () => {},
   refresh: false,
   setRefresh: () => {},
-  editStoredData: false,
-  setEditStoredData: () => {},
-  editLabel: false,
-  setEditLabel: () => {},
+  IsEditStoredData: false,
+  setIsEditStoredData: () => {},
+  IsEditLabel: false,
+  setIsEditLabel: () => {},
   StoreDataforedit: null,
   setStoreDataforedit: () => {},
+  LabelDataforedit: null,
+  setLabelDataforedit: () => {},
 })

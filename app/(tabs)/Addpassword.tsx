@@ -19,6 +19,8 @@ import {
 } from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { useFocusEffect } from "@react-navigation/native"
+import { useLabel } from "@/Hooks/useLabel"
 
 export interface CategoryProps {
   name: string
@@ -37,12 +39,13 @@ const Addpassword = () => {
   const [storeDataId, setStoreDataId] = useState<string>("")
 
   const [category, setCategory] = useState<CategoryProps[]>([])
+  const { Label, fetchLabel, setLabel } = useLabel()
 
   const {
     refresh,
     setRefresh,
-    editStoredData,
-    setEditStoredData,
+    IsEditStoredData,
+    setIsEditStoredData,
     StoreDataforedit,
     setStoreDataforedit,
   } = useContext(CreateUserContext)
@@ -54,7 +57,8 @@ const Addpassword = () => {
     setWebsite(StoreDataforedit?.website!)
     setSelectedCategory(StoreDataforedit?.label_name!)
     setStoreDataId(StoreDataforedit?.id!)
-  }, [editStoredData])
+    console.log("is edit mode Iseditsotredata", IsEditStoredData)
+  }, [IsEditStoredData])
 
   const onAddPassword = async () => {
     try {
@@ -173,14 +177,12 @@ const Addpassword = () => {
   }
 
   useEffect(() => {
-    const fetchLabel = async () => {
-      const label = await getLabelsByUser()
-      console.log("Label:", label)
-      setCategory(label)
+    const fetchLabelByUser = () => {
+      fetchLabel()
+      setCategory(Label)
     }
-
-    fetchLabel() // Call the function to fetch labels
-  }, [])
+    fetchLabelByUser()
+  }, [refresh, Label])
 
   const renderCategoryButton = ({
     name,
@@ -214,6 +216,21 @@ const Addpassword = () => {
     )
   }
 
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setContactinfo("")
+        setPassword("")
+        setTitle("")
+        setWebsite("")
+        setStoreDataId("")
+        setSelectedCategory("")
+        setStoreDataforedit(null)
+        setIsEditStoredData(false)
+      }
+    }, [])
+  )
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -222,7 +239,7 @@ const Addpassword = () => {
       >
         <View style={styles.container}>
           <Text style={styles.title}>
-            {editStoredData ? "Edit Password" : "Add New Password"}
+            {IsEditStoredData ? "Edit Password" : "Add New Password"}
           </Text>
           <Text style={styles.subtitle}>Add new password to your records</Text>
 
@@ -264,8 +281,10 @@ const Addpassword = () => {
 
           <CustomButton
             color={Colors.BLACK}
-            text={editStoredData ? "Update Password" : "Save Password"}
-            onPress={() => (editStoredData ? onPressUpdate() : onAddPassword())}
+            text={IsEditStoredData ? "Update Password" : "Save Password"}
+            onPress={() =>
+              IsEditStoredData ? onPressUpdate() : onAddPassword()
+            }
           />
         </View>
       </ScrollView>

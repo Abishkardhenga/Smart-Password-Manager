@@ -29,29 +29,22 @@ const ViewDetails = () => {
         setIsLoading(false)
       }
     }
-
+    IsEditStoredData
     fetchStoreDataById()
   }, [id])
 
   const {
-    editStoredData,
-    setEditStoredData,
+    IsEditStoredData,
+    setIsEditStoredData,
     StoreDataforedit,
     setStoreDataforedit,
   } = useContext(CreateUserContext)
 
   const onPressEdit = () => {
     router.push("/Addpassword")
-    setEditStoredData(true)
+    setIsEditStoredData(true)
     setStoreDataforedit(details)
   }
-
-  useEffect(() => {
-    return () => {
-      setEditStoredData(false)
-      setStoreDataforedit(null)
-    }
-  }, [editStoredData])
 
   return (
     <SafeAreaView key={id as string}>

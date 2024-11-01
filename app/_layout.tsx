@@ -20,10 +20,14 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   const [userData, setUserData] = useState(null)
   const [refresh, setRefresh] = useState(false)
-  const [editStoredData, setEditStoredData] = useState(false)
-  const [editLabel, setEditLabel] = useState(false)
+  const [IsEditStoredData, setIsEditStoredData] = useState(false)
+  const [IsEditLabel, setIsEditLabel] = useState(false)
   const [StoreDataforedit, setStoreDataforedit] =
     useState<StoreDataProps | null>(null)
+
+  const [LabelDataforedit, setLabelDataforedit] = useState<LabelProps | null>(
+    null
+  )
 
   useEffect(() => {
     SplashScreen.hideAsync()
@@ -36,12 +40,15 @@ export default function RootLayout() {
         setUserData,
         refresh,
         setRefresh,
-        editStoredData,
-        setEditStoredData,
-        editLabel,
-        setEditLabel,
+        IsEditStoredData,
+        setIsEditStoredData,
+        IsEditLabel,
+        setIsEditLabel,
+
         StoreDataforedit,
         setStoreDataforedit,
+        LabelDataforedit,
+        setLabelDataforedit,
       }}
     >
       <ToastProvider>
