@@ -1,30 +1,37 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native"
+import { SafeAreaView, StyleSheet, Text, View } from "react-native"
 import React, { useContext, useState } from "react"
 import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
-import { router } from "expo-router"
-import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
-import Firstoval from "@/assets/images/Firstoval.svg"
-import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { login } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { router } from "expo-router"
+import { firebase } from "@/configs/Firebase.config"
 
 const Resetpassword = () => {
-  const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const { userData } = useContext(CreateUserContext)
 
-  const { userData, setUserData } = useContext(CreateUserContext)
-
-  const resetPassword = () => {}
+  const handleResetPassword = async () => {
+    if (password !== confirmPassword) {
+      showToast({ type: "danger", text: "Password don't match" })
+      return
+    }
+    try {
+      const user = firebase.auth().currentUser
+      if (user) {
+        await user.updatePassword(password) // Update the password
+        showToast({ type: "success", text: "Successfull reset the password" })
+        router.back() // Navigate back to the login screen
+      } else {
+        showToast({ type: "danger", text: "User not authenticated" })
+      }
+    } catch (error: any) {
+      showToast(error.message || "Error resetting password")
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,30 +39,31 @@ const Resetpassword = () => {
 
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Reset Password !!!</Text>
+          <Text style={styles.title}>Reset Password</Text>
+          <Text style={styles.subtitle}>
+            Enter your new password below. Make sure it's a strong combination.
+          </Text>
         </View>
 
         <View style={styles.inputContainer}>
           <CustomInput
-            label=" "
-            placeholder="New  password"
+            placeholder="New password"
             secureTextEntry={true}
             value={password}
             onChangeText={setPassword}
           />
           <CustomInput
-            label=" "
-            placeholder="Enter  password Again"
+            placeholder="Confirm new password"
             secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
           />
         </View>
 
         <CustomButton
           text="Reset Password"
           color={Colors.GREEN}
-          onPress={() => {}}
+          onPress={handleResetPassword}
         />
       </View>
     </SafeAreaView>
@@ -80,43 +88,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     color: Colors.BLACK,
+    letterSpacing: 1,
   },
-
+  subtitle: {
+    textAlign: "center",
+    width: "90%",
+    marginVertical: 10,
+    lineHeight: 22,
+    fontSize: 14,
+    color: Colors.GRAY,
+  },
   inputContainer: {
     width: "100%",
     marginBottom: 20,
-  },
-  termsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  termsText: {
-    fontSize: 14,
-    color: Colors.BLACK,
-  },
-  linkText: {
-    fontSize: 14,
-    color: Colors.GREEN,
-    fontWeight: "bold",
-    marginLeft: 5,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: Colors.BLACK,
-  },
-  signUpText: {
-    fontSize: 14,
-    color: Colors.GREEN,
-    fontWeight: "bold",
-    marginLeft: 5,
   },
 })

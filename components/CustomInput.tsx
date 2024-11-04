@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native"
 import React, { useState } from "react"
 
 interface inputProps {
-  label: string
+  label?: string
   placeholder: string
   secureTextEntry?: boolean
   value?: string

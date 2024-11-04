@@ -21,20 +21,52 @@ import { CreateUserContext } from "@/context/CreateUserContext"
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { userData, setUserData } = useContext(CreateUserContext)
 
-  const onLogin = async (emai: string, password: string) => {
-    if (!email && !password) {
-      showToast({ type: "danger", text: "Enter all the details" })
+  const onLogin = async (email: string, password: string) => {
+    // Check for missing email or password
+    if (!email || !password) {
+      showToast({
+        type: "danger",
+        text: "Please enter both email and password",
+      })
       return
     }
-    const loginUser = await login(email, password)
-    setUserData(loginUser)
-    router.push("/(tabs)/")
-    console.log("loginUser", loginUser)
-    showToast({ type: "success", text: "Successfully login" })
+
+    // Try to login and handle any errors
+    try {
+      // Optional: Show a loading indicator
+      setLoading(true)
+
+      const loginUser = await login(email, password)
+
+      setUserData(loginUser)
+      router.push("/(tabs)/")
+      console.log("loginUser", loginUser)
+
+      showToast({ type: "success", text: "Successfully logged in" })
+    } catch (error: any) {
+      console.error("Error during login:", error)
+
+      let errorMessage = "Something went wrong. Please try again."
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "No user found with this email."
+      } else if (error.code === "auth/wrong-password") {
+        errorMessage = "Incorrect password."
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Invalid email format."
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your connection."
+      }
+
+      showToast({ type: "danger", text: errorMessage })
+    } finally {
+      setLoading(false)
+    }
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <Authheader />

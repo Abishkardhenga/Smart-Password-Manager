@@ -10,20 +10,33 @@ import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
-import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
-import Firstoval from "@/assets/images/Firstoval.svg"
-import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { login } from "@/configs/Firebase.config"
-import { showToast } from "@/utilis/Toast.message"
-import { CreateUserContext } from "@/context/CreateUserContext"
+import firebase from "firebase/app"
+import { sendPasswordResetEmail } from "firebase/auth"
+import { auth } from "@/configs/Firebase.config"
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState(null)
 
-  const { userData, setUserData } = useContext(CreateUserContext)
+  const handleSendOTP = async () => {
+    try {
+      // Create a custom token to simulate OTP (use a third-party service for actual OTP sending)
+      const otp = Math.floor(100000 + Math.random() * 900000).toString() // Random 6 digit OTP
+      // Save OTP to Firestore with a timestamp
+      await sendPasswordResetEmail(auth, email)
 
-  const forgetPassword = () => {}
+      // Navigate to OTP screen using expo-router
+      router.push({
+        pathname: "/Otppage",
+        params: { email },
+      })
+
+      console.log(`OTP for ${email}: ${otp}`) // For debugging purposes
+    } catch (error) {
+      setErrorMessage(error as any)
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,11 +45,22 @@ const ForgetPassword = () => {
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Forget Password</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              width: "80%",
+              marginVertical: 10,
+              lineHeight: 22,
+              fontSize: 14,
+              color: Colors.GRAY,
+            }}
+          >
+            Enter the email address you registered below to reset your password
+          </Text>
         </View>
 
         <CustomInput
-          label=" "
-          placeholder="example@gmail.com"
+          placeholder="Email Address"
           secureTextEntry={false}
           value={email}
           onChangeText={setEmail}
@@ -45,9 +69,7 @@ const ForgetPassword = () => {
         <CustomButton
           text="Verify Email Address"
           color={Colors.GREEN}
-          onPress={() => {
-            router.push("/Otppage")
-          }}
+          onPress={handleSendOTP}
         />
 
         <View style={styles.footer}>
@@ -79,30 +101,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     color: Colors.BLACK,
+    letterSpacing: 1,
   },
 
-  inputContainer: {
-    width: "100%",
-    marginBottom: 20,
-  },
-  termsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  termsText: {
-    fontSize: 14,
-    color: Colors.BLACK,
-  },
-  linkText: {
-    fontSize: 14,
-    color: Colors.GREEN,
-    fontWeight: "bold",
-    marginLeft: 5,
-  },
   footer: {
     flexDirection: "row",
     justifyContent: "center",

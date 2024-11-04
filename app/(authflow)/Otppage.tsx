@@ -3,28 +3,22 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native"
-import React, { useContext, useState } from "react"
-import CustomInput from "@/components/CustomInput"
+import React, { useState, useRef } from "react"
 import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
-import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
-import Firstoval from "@/assets/images/Firstoval.svg"
-import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { login } from "@/configs/Firebase.config"
-import { showToast } from "@/utilis/Toast.message"
-import { CreateUserContext } from "@/context/CreateUserContext"
+import { auth, firebase } from "@/configs/Firebase.config"
 
 const Otppage = () => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+  const [otp, setOtp] = useState(["", "", "", "", "", ""])
+  const [errorMessage, setErrorMessage] = useState<string | null>(null) // Add error state
 
-  const { userData, setUserData } = useContext(CreateUserContext)
-
-  const confirmOtp = () => {}
+  const otpInputs = Array.from({ length: 6 }, () => useRef(null))
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,31 +26,39 @@ const Otppage = () => {
 
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Forget Password</Text>
-          {/* <Text>
-            Enter the 6 digit Otp code that is sent through your email
-          </Text> */}
+          <Text style={styles.title}>Verify OTP</Text>
+          <Text style={styles.subtitle}>
+            Enter the 6-digit code sent to your email below
+          </Text>
         </View>
 
-        <CustomInput
-          label=" "
-          placeholder="example@gmail.com"
-          secureTextEntry={false}
-          value={email}
-          onChangeText={setEmail}
-        />
+        <View style={styles.otpContainer}>
+          {otp.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={otpInputs[index]}
+              style={styles.otpInput}
+              keyboardType="number-pad"
+              maxLength={1}
+              value={digit}
+              onChangeText={() => {}}
+            />
+          ))}
+        </View>
+
+        {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
 
         <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>Didn't get the code ?</Text>
-          <TouchableOpacity>
+          <Text style={styles.termsText}>Didn't get the code?</Text>
+          <TouchableOpacity onPress={() => console.log("Resend OTP logic")}>
             <Text style={styles.linkText}> Resend Code</Text>
           </TouchableOpacity>
         </View>
 
         <CustomButton
-          text="Verify email Address"
+          text="Verify OTP"
           color={Colors.GREEN}
-          onPress={() => router.push("/Resetpassword")}
+          onPress={() => {}}
         />
       </View>
     </SafeAreaView>
@@ -81,14 +83,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     color: Colors.BLACK,
+    letterSpacing: 1,
+    marginBottom: 10,
   },
-
-  inputContainer: {
-    width: "100%",
-    marginBottom: 20,
+  subtitle: {
+    textAlign: "center",
+    width: "90%",
+    marginVertical: 10,
+    lineHeight: 22,
+    fontSize: 14,
+    color: Colors.GRAY,
+  },
+  otpContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 30,
+  },
+  otpInput: {
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderColor: Colors.GRAY,
+    borderRadius: 8,
+    textAlign: "center",
+    fontSize: 18,
+    color: Colors.BLACK,
   },
   termsContainer: {
     flexDirection: "row",
@@ -100,21 +122,6 @@ const styles = StyleSheet.create({
     color: Colors.BLACK,
   },
   linkText: {
-    fontSize: 14,
-    color: Colors.GREEN,
-    fontWeight: "bold",
-    marginLeft: 5,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: Colors.BLACK,
-  },
-  signUpText: {
     fontSize: 14,
     color: Colors.GREEN,
     fontWeight: "bold",
