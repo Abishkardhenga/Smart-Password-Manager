@@ -13,7 +13,9 @@ import { router } from "expo-router"
 import Authheader from "@/components/Authheader"
 import firebase from "firebase/app"
 import { sendPasswordResetEmail } from "firebase/auth"
-import { auth } from "@/configs/Firebase.config"
+import { auth, db } from "@/configs/Firebase.config"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { showToast } from "@/utilis/Toast.message"
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState<string>("")
@@ -21,18 +23,14 @@ const ForgetPassword = () => {
 
   const handleSendOTP = async () => {
     try {
-      // Create a custom token to simulate OTP (use a third-party service for actual OTP sending)
       const otp = Math.floor(100000 + Math.random() * 900000).toString() // Random 6 digit OTP
-      // Save OTP to Firestore with a timestamp
       await sendPasswordResetEmail(auth, email)
-
-      // Navigate to OTP screen using expo-router
-      router.push({
-        pathname: "/Otppage",
-        params: { email },
+      showToast({
+        type: "success",
+        text: "Successfully send the reset password link in your email",
       })
 
-      console.log(`OTP for ${email}: ${otp}`) // For debugging purposes
+      console.log(`OTP for ${email}: ${otp}`)
     } catch (error) {
       setErrorMessage(error as any)
     }

@@ -96,7 +96,11 @@ const Login = () => {
 
         <View style={styles.termsContainer}>
           <Text style={styles.termsText}>Remember me</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/(authflow)/Forgetpassword")
+            }}
+          >
             <Text style={styles.linkText}> Forget Password ? </Text>
           </TouchableOpacity>
         </View>
