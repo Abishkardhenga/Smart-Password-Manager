@@ -21,6 +21,7 @@ import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useFocusEffect } from "@react-navigation/native"
 import { useLabel } from "@/Hooks/useLabel"
+import { ActivityIndicator, MD2Colors } from "react-native-paper"
 
 export interface CategoryProps {
   name: string
@@ -37,6 +38,7 @@ const Addpassword = () => {
   const [contactinfo, setContactinfo] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [storeDataId, setStoreDataId] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [category, setCategory] = useState<CategoryProps[]>([])
   const { Label, fetchLabel, setLabel } = useLabel()
@@ -61,6 +63,7 @@ const Addpassword = () => {
   }, [IsEditStoredData])
 
   const onAddPassword = async () => {
+    setLoading(true) // Start loading
     try {
       if (
         !selectedCategory ||
@@ -70,6 +73,7 @@ const Addpassword = () => {
         !password
       ) {
         showToast({ type: "warning", text: "Please fill in all the details" })
+        setLoading(false) // End loading
         return
       }
 
@@ -100,10 +104,13 @@ const Addpassword = () => {
         type: "danger",
         text: "Failed to add password. Please try again.",
       })
+    } finally {
+      setLoading(false) // End loading
     }
   }
 
   const onPressUpdate = async () => {
+    setLoading(true) // Start loading
     try {
       if (
         !selectedCategory ||
@@ -113,6 +120,7 @@ const Addpassword = () => {
         !password
       ) {
         showToast({ type: "warning", text: "Please fill in all the details" })
+        setLoading(false) // End loading
         return
       }
 
@@ -125,6 +133,7 @@ const Addpassword = () => {
           type: "danger",
           text: "Error: No valid ID found for the stored data.",
         })
+        setLoading(false) // End loading
         return
       }
 
@@ -157,12 +166,10 @@ const Addpassword = () => {
         setPassword("")
         setTitle("")
         setWebsite("")
-
         setStoreDataforedit(null)
       }
     } catch (error) {
       console.error("Error updating password:", error)
-
       showToast({
         type: "danger",
         text: "Failed to update password. Please try again.",
@@ -171,8 +178,9 @@ const Addpassword = () => {
       setPassword("")
       setTitle("")
       setWebsite("")
-
       setStoreDataforedit(null)
+    } finally {
+      setLoading(false) // End loading
     }
   }
 
@@ -285,7 +293,11 @@ const Addpassword = () => {
             onPress={() =>
               IsEditStoredData ? onPressUpdate() : onAddPassword()
             }
-          />
+          >
+            {loading && (
+              <ActivityIndicator animating={true} color={MD2Colors.white} />
+            )}
+          </CustomButton>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -322,10 +334,12 @@ const styles = StyleSheet.create({
   },
   categoryButton: {
     padding: 8,
-    borderRadius: 8,
-    marginRight: 10,
+    borderRadius: 4,
+    marginRight: 8,
+    marginBottom: 8,
   },
   categoryText: {
     fontSize: 14,
+    fontWeight: "500",
   },
 })

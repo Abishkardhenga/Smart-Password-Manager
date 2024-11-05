@@ -14,9 +14,10 @@ import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { login } from "@/configs/Firebase.config"
+import { login, sendEmailVerificationn } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { ActivityIndicator, MD2Colors } from "react-native-paper"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
@@ -35,25 +36,23 @@ const Login = () => {
       return
     }
 
-    try {
-      // Show loading indicator
-      setLoading(true)
+    // Show loading indicator
+    setLoading(true)
 
+    try {
       // Attempt to log in the user
       const loginUser = await login(email, password)
 
       // Check if the user's email is verified
-      if (!loginUser.emailVerified) {
+      if (!loginUser?.emailVerified) {
+        await sendEmailVerificationn(loginUser!)
         showToast({
           type: "danger",
-          text: "Please verify your email before logging in.",
+          text: "Email not verified. A new verification email has been sent.",
         })
-        // Stop further execution if email is not verified
-        setLoading(false)
         return
       }
 
-      // Successful login: Set user data and navigate to home
       setUserData(loginUser)
       router.push("/(tabs)/")
       console.log("LoginUser:", loginUser)
@@ -63,28 +62,24 @@ const Login = () => {
         text: "Successfully logged in.",
       })
     } catch (error: any) {
-      console.error("Error during login:", error)
+      let errorMessage = "Something went wrong"
 
-      // Define error messages based on Firebase error codes
-      let errorMessage = "Something went wrong. Please try again."
-      switch (error.code) {
-        case "auth/user-not-found":
-          errorMessage = "No user found with this email."
-          break
-        case "auth/wrong-password":
-          errorMessage = "Incorrect password."
-          break
-        case "auth/invalid-email":
-          errorMessage = "Invalid email format."
-          break
-        case "auth/network-request-failed":
-          errorMessage = "Network error. Please check your connection."
-          break
-        default:
-          errorMessage = error.message || errorMessage
+      if (error.code === "auth/invalid-email") {
+        errorMessage = "The email address is not registered."
+      } else if (error.code === "auth/user-not-found") {
+        errorMessage = "No user found with this email."
+      } else if (error.code === "auth/wrong-password") {
+        errorMessage = "Incorrect password. Please try again."
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your connection."
+      } else {
+        console.error("Unexpected error:", error)
       }
 
-      // Display the error message
+      // Log the error for debugging purposes
+      console.error("Error during login: ", error)
+
+      // Show error message to the user
       showToast({
         type: "danger",
         text: errorMessage,
@@ -134,10 +129,14 @@ const Login = () => {
         </View>
 
         <CustomButton
-          text="Login"
+          text={loading ? null : "Login"}
           color={Colors.GREEN}
           onPress={() => onLogin(email, password)}
-        />
+        >
+          {loading && (
+            <ActivityIndicator animating={true} color={MD2Colors.white} />
+          )}
+        </CustomButton>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account?</Text>

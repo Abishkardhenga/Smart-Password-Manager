@@ -1,14 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import React from "react"
+import React, { ReactNode } from "react"
 import { Colors } from "@/constants/Colors"
 
 interface buttonProps {
   color: string
-  text: string
+  text: string | null
   onPress?: () => void
+  children?: ReactNode
 }
 
-const CustomButton = ({ color, text, onPress }: buttonProps) => {
+const CustomButton = ({ color, text, onPress, children }: buttonProps) => {
   return (
     <View
       style={{
@@ -19,7 +20,9 @@ const CustomButton = ({ color, text, onPress }: buttonProps) => {
       }}
     >
       <TouchableOpacity onPress={onPress}>
-        {text && (
+        {children ? (
+          children // Render children if they exist (e.g., ActivityIndicator)
+        ) : (
           <Text
             style={{
               color: Colors.WHITE,

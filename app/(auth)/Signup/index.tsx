@@ -16,64 +16,75 @@ import Authheader from "@/components/Authheader"
 import { signup } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { ActivityIndicator, MD2Colors } from "react-native-paper"
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("")
   const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { userData, setUserData } = useContext(CreateUserContext)
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const onCreateAccount = async (
     email: string,
     password: string,
     name: string
   ) => {
+    setLoading(true) // Start loading
+
     try {
-      // Input validation
       if (!email || !password || !name) {
         showToast({ type: "danger", text: "Please fill in all the details." })
+        setLoading(false) // Stop loading
         return
       }
 
-      // Email validation (simple regex check)
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        showToast({ type: "danger", text: "Invalid email format." })
+      if (!isValidEmail(email)) {
+        showToast({
+          type: "danger",
+          text: "Please enter a valid email address.",
+        })
+        setLoading(false) // Stop loading
         return
       }
 
-      // Password validation
       if (password.length < 6) {
         showToast({
           type: "danger",
           text: "Password must be at least 6 characters.",
         })
+        setLoading(false) // Stop loading
         return
       }
 
-      // Create account
       const data = await signup(email, password, name)
-
-      if (data) {
-        // Set user data
-        setUserData(data)
-
-        showToast({
-          type: "success",
-          text: "Signup successful! A verification email has been sent.",
-        })
-
-        // router.push("/(tabs)/")
-      } else {
-        throw new Error("Signup failed. Please try again.")
-      }
+      setUserData(data)
+      showToast({
+        type: "success",
+        text: "Signup successful! A verification email has been sent.",
+      })
     } catch (error: any) {
       console.error("Error during signup:", error)
-      showToast({
-        type: "danger",
-        text: error.message || "Signup failed. Please try again.",
-      })
+
+      if (error.code === "auth/email-already-in-use") {
+        showToast({
+          type: "danger",
+          text: "This email is already in use. Please use a different email.",
+        })
+      } else {
+        showToast({
+          type: "danger",
+          text: error.message || "Signup failed. Please try again.",
+        })
+      }
+    } finally {
+      setLoading(false) // Ensure loading stops after success or error
     }
   }
 
@@ -124,7 +135,11 @@ const Signup = () => {
           text="Sign Up"
           color={Colors.GREEN}
           onPress={() => onCreateAccount(email, password, name)}
-        />
+        >
+          {loading && (
+            <ActivityIndicator animating={true} color={MD2Colors.white} />
+          )}
+        </CustomButton>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account?</Text>
