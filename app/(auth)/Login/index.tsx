@@ -30,39 +30,67 @@ const Login = () => {
     if (!email || !password) {
       showToast({
         type: "danger",
-        text: "Please enter both email and password",
+        text: "Please enter both email and password.",
       })
       return
     }
 
-    // Try to login and handle any errors
     try {
-      // Optional: Show a loading indicator
+      // Show loading indicator
       setLoading(true)
 
+      // Attempt to log in the user
       const loginUser = await login(email, password)
 
+      // Check if the user's email is verified
+      if (!loginUser.emailVerified) {
+        showToast({
+          type: "danger",
+          text: "Please verify your email before logging in.",
+        })
+        // Stop further execution if email is not verified
+        setLoading(false)
+        return
+      }
+
+      // Successful login: Set user data and navigate to home
       setUserData(loginUser)
       router.push("/(tabs)/")
-      console.log("loginUser", loginUser)
+      console.log("LoginUser:", loginUser)
 
-      showToast({ type: "success", text: "Successfully logged in" })
+      showToast({
+        type: "success",
+        text: "Successfully logged in.",
+      })
     } catch (error: any) {
       console.error("Error during login:", error)
 
+      // Define error messages based on Firebase error codes
       let errorMessage = "Something went wrong. Please try again."
-      if (error.code === "auth/user-not-found") {
-        errorMessage = "No user found with this email."
-      } else if (error.code === "auth/wrong-password") {
-        errorMessage = "Incorrect password."
-      } else if (error.code === "auth/invalid-email") {
-        errorMessage = "Invalid email format."
-      } else if (error.code === "auth/network-request-failed") {
-        errorMessage = "Network error. Please check your connection."
+      switch (error.code) {
+        case "auth/user-not-found":
+          errorMessage = "No user found with this email."
+          break
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password."
+          break
+        case "auth/invalid-email":
+          errorMessage = "Invalid email format."
+          break
+        case "auth/network-request-failed":
+          errorMessage = "Network error. Please check your connection."
+          break
+        default:
+          errorMessage = error.message || errorMessage
       }
 
-      showToast({ type: "danger", text: errorMessage })
+      // Display the error message
+      showToast({
+        type: "danger",
+        text: errorMessage,
+      })
     } finally {
+      // Hide loading indicator
       setLoading(false)
     }
   }

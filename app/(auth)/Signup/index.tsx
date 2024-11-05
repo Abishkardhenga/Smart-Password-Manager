@@ -29,19 +29,52 @@ const Signup = () => {
     password: string,
     name: string
   ) => {
-    if (!email || !password || !name) {
-      showToast({ type: "danger", text: "Enter all the details" })
-      console.log("Please fill in all details")
+    try {
+      // Input validation
+      if (!email || !password || !name) {
+        showToast({ type: "danger", text: "Please fill in all the details." })
+        return
+      }
 
-      return
+      // Email validation (simple regex check)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        showToast({ type: "danger", text: "Invalid email format." })
+        return
+      }
+
+      // Password validation
+      if (password.length < 6) {
+        showToast({
+          type: "danger",
+          text: "Password must be at least 6 characters.",
+        })
+        return
+      }
+
+      // Create account
+      const data = await signup(email, password, name)
+
+      if (data) {
+        // Set user data
+        setUserData(data)
+
+        showToast({
+          type: "success",
+          text: "Signup successful! A verification email has been sent.",
+        })
+
+        // router.push("/(tabs)/")
+      } else {
+        throw new Error("Signup failed. Please try again.")
+      }
+    } catch (error: any) {
+      console.error("Error during signup:", error)
+      showToast({
+        type: "danger",
+        text: error.message || "Signup failed. Please try again.",
+      })
     }
-
-    const data = await signup(email, password, name)
-    setUserData(data)
-    showToast({ type: "success", text: "Signup Successfully" })
-
-    router.push("/(tabs)/")
-    console.log("Data on signup:", data)
   }
 
   return (
@@ -80,7 +113,9 @@ const Signup = () => {
 
         <View style={styles.termsContainer}>
           <Text style={styles.termsText}>Remember me </Text>
-          <TouchableOpacity onPress={() => router.push("/Forgetpassword")}>
+          <TouchableOpacity
+            onPress={() => router.push("/(authflow)/Forgetpassword")}
+          >
             <Text style={styles.linkText}> Forget Password ? </Text>
           </TouchableOpacity>
         </View>
