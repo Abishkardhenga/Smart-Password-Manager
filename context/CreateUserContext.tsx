@@ -1,5 +1,5 @@
+import { LabelProps, StoreDataProps } from "@/types/PasswordManager.types"
 import { createContext } from "react"
-import { LabelProps, StoreDataProps } from "@/types/Label.types"
 
 type ContextData = {
   userData: any

@@ -1,5 +1,5 @@
-import { getStoredData } from "@/configs/Firebase.config"
-import { StoreDataProps } from "@/types/Label.types"
+import { getStoredData } from "@/configs/StoredataManagement.config"
+import { StoreDataProps } from "@/types/PasswordManager.types"
 import { useEffect, useState } from "react"
 
 export const useStoredData = () => {

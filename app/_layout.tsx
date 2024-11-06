@@ -13,8 +13,7 @@ import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import "react-native-reanimated"
 import { ToastProvider } from "react-native-toast-notifications"
-import { StoreDataProps } from "@/types/PasswordManager.types"
-import { LabelProps } from "react-native-paper/lib/typescript/components/TextInput/types"
+import { LabelProps, StoreDataProps } from "@/types/PasswordManager.types"
 
 SplashScreen.preventAutoHideAsync()
 

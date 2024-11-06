@@ -1,5 +1,5 @@
-import { getLabelsByUser } from "@/configs/Firebase.config"
-import { LabelProps } from "@/types/Label.types"
+import { getLabelsByUser } from "@/configs/LabelManagement.confi"
+import { LabelProps } from "@/types/PasswordManager.types"
 import { useEffect, useState } from "react"
 
 export const useLabel = () => {
