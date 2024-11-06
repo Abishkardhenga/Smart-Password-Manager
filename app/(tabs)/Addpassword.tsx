@@ -12,16 +12,16 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
-import {
-  addStoredData,
-  editStoredDataa,
-  getLabelsByUser,
-} from "@/configs/Firebase.config"
+
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useFocusEffect } from "@react-navigation/native"
 import { useLabel } from "@/Hooks/useLabel"
 import { ActivityIndicator, MD2Colors } from "react-native-paper"
+import {
+  addStoredData,
+  editStoredDataa,
+} from "@/configs/StoredataManagement.config"
 
 export interface CategoryProps {
   name: string

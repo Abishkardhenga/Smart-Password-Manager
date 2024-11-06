@@ -15,11 +15,11 @@ import CustomButton from "@/components/CustomButton"
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { showToast } from "@/utilis/Toast.message"
-import { addLabel, editLabel } from "@/configs/Firebase.config"
 import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useLabel } from "@/Hooks/useLabel"
 import { useFocusEffect } from "@react-navigation/native"
+import { addLabel, editLabel } from "@/configs/LabelManagement.confi"
 
 interface CategoryProps {
   label: string
@@ -71,16 +71,48 @@ const AddLabel = () => {
   }, [IsEditLabel])
 
   const onUpdateLabel = async () => {
-    await editLabel(
-      LabelDataforedit?.id!,
-      LabelDataforedit?.name!,
-      LabelDataforedit?.color!
-    )
-    showToast({ type: "success", text: "Label successfully updated" })
-    setIsEditLabel(false)
-    setCurrentColor("")
-    setLabel("")
-    setLabelDataforedit(null)
+    if (
+      !LabelDataforedit?.id ||
+      !LabelDataforedit?.name ||
+      !LabelDataforedit?.color
+    ) {
+      showToast({
+        type: "warning",
+        text: "Invalid label data. Please try again.",
+      })
+      return
+    }
+
+    try {
+      const response = await editLabel(
+        LabelDataforedit.id,
+        LabelDataforedit.name,
+        LabelDataforedit.color
+      )
+
+      if (response.success) {
+        showToast({
+          type: "success",
+          text: response.message || "Label successfully updated",
+        })
+
+        setIsEditLabel(false)
+        setCurrentColor("")
+        setLabel("")
+        setLabelDataforedit(null)
+      } else {
+        showToast({
+          type: "danger",
+          text: response.message || "Failed to update label",
+        })
+      }
+    } catch (error) {
+      console.error("Error updating label:", error)
+      showToast({
+        type: "danger",
+        text: "An error occurred while updating the label",
+      })
+    }
   }
 
   useEffect(() => {

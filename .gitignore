@@ -20,7 +20,8 @@ web-build/
 expo-env.d.ts
 # @end expo-cli
 
-
+.env
+env
 folders 
 
 configs

@@ -13,12 +13,11 @@ import {
   FlatList,
 } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import { deleteLabel, getStoredData } from "@/configs/Firebase.config"
-import { StoreDataProps } from "@/types/Label.types"
 import { showToast } from "@/utilis/Toast.message"
 import { useLabel } from "@/Hooks/useLabel"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useStoredData } from "@/Hooks/useStoredData"
+import { getStoredData } from "@/configs/StoredataManagement.config"
 
 const Saved = () => {
   const { Label, fetchLabel, setLabel } = useLabel()

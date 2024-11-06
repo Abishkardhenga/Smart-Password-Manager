@@ -12,10 +12,10 @@ import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import Authheader from "@/components/Authheader"
 import firebase from "firebase/app"
-import { sendPasswordResetEmail } from "firebase/auth"
 import { auth, db } from "@/configs/Firebase.config"
 import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { showToast } from "@/utilis/Toast.message"
+import { sendPasswordResetEmailFn } from "@/configs/Authentication.config"
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState<string>("")
@@ -24,7 +24,7 @@ const ForgetPassword = () => {
   const handleSendOTP = async () => {
     try {
       const otp = Math.floor(100000 + Math.random() * 900000).toString() // Random 6 digit OTP
-      await sendPasswordResetEmail(auth, email)
+      await sendPasswordResetEmailFn(email)
       showToast({
         type: "success",
         text: "Successfully send the reset password link in your email",

@@ -8,8 +8,7 @@ import {
 import React, { useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
 import CustomBackButton from "@/components/CustomBackButton"
-import { StoreDataProps } from "@/types/Label.types"
-import { getStoredDataByLabel } from "@/configs/Firebase.config"
+import { getStoredDataByLabel } from "@/configs/StoredataManagement.config"
 
 const Label = () => {
   const { id } = useLocalSearchParams()

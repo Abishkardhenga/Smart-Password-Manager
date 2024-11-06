@@ -11,8 +11,6 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import { Colors } from "@/constants/Colors"
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
-import { deleteLabel, getLabelsByUser, logout } from "@/configs/Firebase.config"
-import { LabelProps } from "@/types/Label.types"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 import Feather from "@expo/vector-icons/Feather"
 import Entypo from "@expo/vector-icons/Entypo"
@@ -20,6 +18,9 @@ import { useLabel } from "@/Hooks/useLabel"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { showToast } from "@/utilis/Toast.message"
 import { router } from "expo-router"
+import { deleteLabel } from "@/configs/LabelManagement.confi"
+import { LabelProps } from "@/types/PasswordManager.types"
+import { logout } from "@/configs/Authentication.config"
 
 const Setting = () => {
   const [openedMenuLabelId, setOpenedMenuLabelId] = useState<string | null>(

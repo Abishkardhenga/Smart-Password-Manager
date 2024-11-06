@@ -6,6 +6,18 @@
  } 
 
 
+ export interface StoredData {
+   id?: string;
+   user_id?: string;
+   label_id?: string;
+   label_name: string;
+   password: string;
+   title: string;
+   website: string;
+   contact_info: string;
+ }
+
+
  export interface StoreDataProps {
    id?:string;
     label_id?:string

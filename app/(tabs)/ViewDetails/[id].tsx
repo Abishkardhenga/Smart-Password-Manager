@@ -11,9 +11,9 @@ import Viewdetailscard from "@/components/Viewdetailscard"
 import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
 import { router, useLocalSearchParams } from "expo-router"
-import { getStoreDatabyId } from "@/configs/Firebase.config"
-import { StoreDataProps } from "@/types/Label.types"
 import { CreateUserContext } from "@/context/CreateUserContext"
+import { getStoreDatabyId } from "@/configs/StoredataManagement.config"
+import { StoreDataProps } from "@/types/PasswordManager.types"
 
 const ViewDetails = () => {
   const { id } = useLocalSearchParams()

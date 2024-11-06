@@ -13,10 +13,10 @@ import { router } from "expo-router"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { signup } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { ActivityIndicator, MD2Colors } from "react-native-paper"
+import { signup } from "@/configs/Authentication.config"
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("")

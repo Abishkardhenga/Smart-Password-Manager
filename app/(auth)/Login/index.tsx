@@ -14,10 +14,10 @@ import LoginScreenImg from "@/assets/images/loginscreenimg.svg"
 import Firstoval from "@/assets/images/Firstoval.svg"
 import Secondoval from "@/assets/images/Secondoval.svg"
 import Authheader from "@/components/Authheader"
-import { login, sendEmailVerificationn } from "@/configs/Firebase.config"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { ActivityIndicator, MD2Colors } from "react-native-paper"
+import { login, sendEmailVerificationn } from "@/configs/Authentication.config"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
@@ -36,14 +36,11 @@ const Login = () => {
       return
     }
 
-    // Show loading indicator
     setLoading(true)
 
     try {
-      // Attempt to log in the user
       const loginUser = await login(email, password)
 
-      // Check if the user's email is verified
       if (!loginUser?.emailVerified) {
         await sendEmailVerificationn(loginUser!)
         showToast({
