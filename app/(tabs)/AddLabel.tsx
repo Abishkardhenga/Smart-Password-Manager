@@ -19,7 +19,7 @@ import uuid from "react-native-uuid"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useLabel } from "@/Hooks/useLabel"
 import { useFocusEffect } from "@react-navigation/native"
-import { addLabel, editLabel } from "@/configs/LabelManagement.confi"
+import { addLabel, editLabel } from "@/lib/LabelManagement.confi"
 
 interface CategoryProps {
   label: string

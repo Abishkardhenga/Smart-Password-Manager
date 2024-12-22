@@ -12,10 +12,10 @@ import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import Authheader from "@/components/Authheader"
 import firebase from "firebase/app"
-import { auth, db } from "@/configs/Firebase.config"
+import { auth, db } from "@/lib/firebase"
 import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { showToast } from "@/utilis/Toast.message"
-import { sendPasswordResetEmailFn } from "@/configs/Authentication.config"
+import { sendPasswordResetEmailFn } from "@/lib/authentication"
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState<string>("")

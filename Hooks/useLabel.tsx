@@ -1,4 +1,4 @@
-import { getLabelsByUser } from "@/configs/LabelManagement.confi"
+import { getLabelsByUser } from "@/lib/LabelManagement.confi"
 import { LabelProps } from "@/types/PasswordManager.types"
 import { useEffect, useState } from "react"
 

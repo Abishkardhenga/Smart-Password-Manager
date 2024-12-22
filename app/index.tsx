@@ -12,7 +12,7 @@ import Onboard from "@/assets/images/onboard.svg" // Ensure this path is correct
 import { Colors } from "@/constants/Colors"
 import { router } from "expo-router"
 import { onAuthStateChanged } from "firebase/auth"
-import { auth } from "@/configs/Firebase.config"
+import { auth } from "@/lib/firebase"
 
 const Index = () => {
   const user = auth.currentUser

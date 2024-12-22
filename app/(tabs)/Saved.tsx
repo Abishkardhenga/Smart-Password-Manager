@@ -17,7 +17,7 @@ import { showToast } from "@/utilis/Toast.message"
 import { useLabel } from "@/Hooks/useLabel"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { useStoredData } from "@/Hooks/useStoredData"
-import { getStoredData } from "@/configs/StoredataManagement.config"
+import { getStoredData } from "@/lib/storedata"
 
 const Saved = () => {
   const { Label, fetchLabel, setLabel } = useLabel()

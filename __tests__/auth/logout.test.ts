@@ -1,5 +1,5 @@
-import { logout } from '@/configs/Authentication.config';
-import { auth } from '@/configs/Firebase.config';
+import { logout } from '@/lib/Authentication.config';
+import { auth } from '@/lib/Firebase.config';
 import { signOut } from 'firebase/auth';
 
 jest.mock('firebase/auth');

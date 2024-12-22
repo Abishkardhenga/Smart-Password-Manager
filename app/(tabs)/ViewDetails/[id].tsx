@@ -12,7 +12,7 @@ import Feather from "@expo/vector-icons/Feather"
 import { Colors } from "@/constants/Colors"
 import { router, useLocalSearchParams } from "expo-router"
 import { CreateUserContext } from "@/context/CreateUserContext"
-import { getStoreDatabyId } from "@/configs/StoredataManagement.config"
+import { getStoreDatabyId } from "@/lib/storedata"
 import { StoreDataProps } from "@/types/PasswordManager.types"
 
 const ViewDetails = () => {

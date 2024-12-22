@@ -21,7 +21,7 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper"
 import {
   addStoredData,
   editStoredDataa,
-} from "@/configs/StoredataManagement.config"
+} from "@/lib/StoredataManagement.config"
 
 export interface CategoryProps {
   name: string

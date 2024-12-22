@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
 import CustomBackButton from "@/components/CustomBackButton"
-import { getStoredDataByLabel } from "@/configs/StoredataManagement.config"
+import { getStoredDataByLabel } from "@/lib/StoredataManagement.config"
 
 const Label = () => {
   const { id } = useLocalSearchParams()

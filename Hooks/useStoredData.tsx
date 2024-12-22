@@ -1,4 +1,4 @@
-import { getStoredData } from "@/configs/StoredataManagement.config"
+import { getStoredData } from "@/lib/StoredataManagement.config"
 import { StoreDataProps } from "@/types/PasswordManager.types"
 import { useEffect, useState } from "react"
 

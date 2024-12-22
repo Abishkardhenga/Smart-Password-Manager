@@ -16,7 +16,7 @@ import Authheader from "@/components/Authheader"
 import { showToast } from "@/utilis/Toast.message"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { ActivityIndicator, MD2Colors } from "react-native-paper"
-import { signup } from "@/configs/Authentication.config"
+import { signup } from "@/lib/authentication"
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("")

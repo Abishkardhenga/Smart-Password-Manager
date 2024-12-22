@@ -18,9 +18,9 @@ import { useLabel } from "@/Hooks/useLabel"
 import { CreateUserContext } from "@/context/CreateUserContext"
 import { showToast } from "@/utilis/Toast.message"
 import { router } from "expo-router"
-import { deleteLabel } from "@/configs/LabelManagement.confi"
+import { deleteLabel } from "@/lib/LabelManagement.confi"
 import { LabelProps } from "@/types/PasswordManager.types"
-import { logout } from "@/configs/Authentication.config"
+import { logout } from "@/lib/Authentication.config"
 
 const Setting = () => {
   const [openedMenuLabelId, setOpenedMenuLabelId] = useState<string | null>(
