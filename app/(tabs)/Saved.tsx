@@ -86,23 +86,31 @@ const Saved = () => {
         </View>
 
         <View style={styles.noPasswordContainer}>
-          <FlatList
-            data={StoredData}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <Passwordcard
-                title={item.title}
-                emailOrNumber={item.contact_info}
-                address={() =>
-                  router.push({
-                    pathname: "/(tabs)/ViewDetails/[id]",
-                    params: { id: item.id! },
-                  })
-                }
-                color="#000"
-              />
-            )}
-          />
+          {StoredData.length === 0 ? (
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/Addpassword")}
+            >
+              <Text style={styles.noPasswordText}>No passwords saved</Text>
+            </TouchableOpacity>
+          ) : (
+            <FlatList
+              data={StoredData}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <Passwordcard
+                  title={item.title}
+                  emailOrNumber={item.contact_info}
+                  address={() =>
+                    router.push({
+                      pathname: "/(tabs)/ViewDetails/[id]",
+                      params: { id: item.id! },
+                    })
+                  }
+                  color="#000"
+                />
+              )}
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -154,12 +162,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   noPasswordContainer: {
-    height: "75%",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   noPasswordText: {
     fontSize: 18,
     fontWeight: "700",
     color: Colors.BLACK,
+    textAlign: "center",
+    marginTop: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: Colors.BLACK,
+    borderRadius: 5,
   },
 })
 
